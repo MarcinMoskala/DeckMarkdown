@@ -1,0 +1,1 @@
+fun writeCards(cards: List<Card>): String = ""
