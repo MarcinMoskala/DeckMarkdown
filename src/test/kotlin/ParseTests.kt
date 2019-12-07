@@ -7,7 +7,7 @@ class ParseTests {
 
     @Test
     fun `Text string with no special elements produces no cards`() {
-        val texts = listOf("", "Lorem ipsum", "A\n\nB")
+        val texts = listOf("", "Lorem ipsum", "A\nB")
         for (text in texts) {
             val cards = parseCards(text)
             assertEquals(listOf(Card.Text(text)), cards)
@@ -58,14 +58,6 @@ class ParseTests {
         """.trimIndent()
         val cards = parseCards(text)
         assertEquals(listOf(Card.BasicAndReverse("My question", "My answer")), cards)
-    }
-
-    @Test
-    fun `Incorrect texts throw errors correctly`() {
-        val texts = listOf("q:Lorem ipsum", "qa: Lorem }ipsum")
-        for (text in texts) {
-            assertThrows<IncorrectFormatException> { parseCards(text) }
-        }
     }
 
     @Test

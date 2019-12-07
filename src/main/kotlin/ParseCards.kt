@@ -3,22 +3,26 @@ package parse
 import Card
 import java.lang.Exception
 
+val BRACKET_REGEX = "\\{([^}]+)}".toRegex()
+const val BASIC_PATTERN = "q: {front}\na: {back}"
+val BASIC_REGEX = "q: ([^\\n]+)\\na: ([^\\n]+)".toRegex()
+const val BASIC_AND_REVERSED_PATTERN = "qa: {front}\naq: {back}"
+val BASIC_AND_REVERSED_REGEX = "qa: ([^\\n]+)\\naq: ([^\\n]+)".toRegex()
+
 fun parseCards(markdown: String): List<Card> {
     val slitted = markdown.split("\n\n")
-    return slitted.flatMap { paragraph ->
+    return slitted.map { paragraph ->
         when {
-            paragraph.startsWith("q:") -> {
-                val (question, answer) = parseQA(paragraph, "q: ", "a: ")
-                listOf(Card.Basic(question, answer))
+            BASIC_REGEX in paragraph -> {
+                val (question, answer) = parseQA(paragraph, BASIC_REGEX)
+                Card.Basic(question, answer)
             }
-            paragraph.startsWith("qa:") -> {
-                val (question, answer) = parseQA(paragraph, "qa: ", "aq: ")
-                listOf(Card.BasicAndReverse(question, answer))
+            BASIC_AND_REVERSED_REGEX in paragraph -> {
+                val (question, answer) = parseQA(paragraph, BASIC_AND_REVERSED_REGEX)
+                Card.BasicAndReverse(question, answer)
             }
-            paragraph.contains(BRACKET_REGEX) -> {
-                listOf(Card.Cloze(paragraph.processCloze()))
-            }
-            else -> emptyList()
+            BRACKET_REGEX in paragraph -> Card.Cloze(paragraph.processCloze())
+            else -> Card.Text(paragraph)
         }
     }
 }
@@ -34,16 +38,11 @@ private fun String.processCloze(): String {
     }
 }
 
-private val BRACKET_REGEX = "\\{([^}]+)}".toRegex()
-
-private fun parseQA(text: String, qStart: String, aStart: String): Pair<String, String> =
-    text.regexGroups("$qStart([^\\n]+)\\n$aStart([^\\n]+)")
+private fun parseQA(text: String, regex: Regex): Pair<String, String> =
+    regex
+        .matchEntire(text)
+        ?.groupValues
+        ?.drop(1)
         ?.map { it.trim() }
         ?.let { (f, s) -> f to s }
         ?: throw IncorrectFormatException(text)
-
-private fun String.regexGroups(regex: String): List<String>? =
-    regex.toRegex()
-        .matchEntire(this)
-        ?.groupValues
-        ?.drop(1)
