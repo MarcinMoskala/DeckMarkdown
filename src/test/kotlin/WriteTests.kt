@@ -52,4 +52,24 @@ a: DDD
         """.trimIndent()
         assertEquals(expected, text)
     }
+
+    @Test
+    fun `All are stored correctly`() {
+        val cards = listOf(
+            Card.Basic("AAA", "BBB"),
+            Card.Cloze("And this {{c1::text}} number is {{c2::2}}"),
+            Card.BasicAndReverse("GGG", "HHH HHH")
+        )
+        val text = writeCards(cards)
+        val expected = """
+q: AAA
+a: BBB
+
+And this {{c1::text}} number is {{c2::2}}
+
+qa: GGG
+aq: HHH HHH
+        """.trimIndent()
+        assertEquals(expected, text)
+    }
 }
