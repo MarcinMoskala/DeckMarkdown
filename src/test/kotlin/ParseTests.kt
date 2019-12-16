@@ -1,43 +1,55 @@
 import org.junit.Test
-import parse.IncorrectFormatException
 import parse.parseCards
 import kotlin.test.assertEquals
 
 class ParseTests {
 
     @Test
-    fun `Text string with no special elements produces no cards`() {
-        val texts = listOf("", "Lorem ipsum", "A\nB")
-        for (text in texts) {
-            val cards = parseCards(text)
-            assertEquals(listOf(Card.Text(text)), cards)
+    fun `Text string with no special elements produces Text cards`() {
+        val texts = listOf("@1\nK", "@1\nLorem ipsum", "@1\nA\nB")
+        for (wholeText in texts) {
+            val text = wholeText.substringAfter("\n")
+            val cards = parseCards(wholeText)
+            assertEquals(listOf(Card.Text("1", text)), cards)
         }
     }
 
     @Test
+    fun `IncorrectFormatException is thrown when only id and not card`() {
+        assertThrows<IllegalArgumentException> { parseCards("@1") }
+        assertThrows<IllegalArgumentException> { parseCards("@1\n") }
+    }
+
+    @Test
     fun `Text string with incorrect special syntax elements produces no cards`() {
-        val texts = listOf("Lorem {ipsum", "Lorem }ipsum", "Lorem }{ipsum")
-        for (text in texts) {
-            val cards = parseCards(text)
-            assertEquals(listOf(Card.Text(text)), cards)
+        val texts = listOf("@1\nLorem {ipsum", "@1\nLorem }ipsum", "@1\nLorem }{ipsum")
+        for (wholeText in texts) {
+            val text = wholeText.substringAfter("\n")
+            val cards = parseCards(wholeText)
+            assertEquals(listOf(Card.Text("1", text)), cards)
         }
     }
 
     @Test
     fun `Text string with cloze produces a cloze card`() {
         val cards = parseCards("Lorem {ipsum} est")
-        assertEquals(listOf(Card.Cloze("Lorem {{c1::ipsum}} est")), cards)
+        assertEquals(listOf(Card.Cloze(text = "Lorem {{c1::ipsum}} est")), cards)
     }
 
     @Test
     fun `We can have multiple clozes and they are separated by an empty line`() {
         val text = """
             This is text {1}
-            
+
             And this {text} number is {2}
         """.trimIndent()
         val cards = parseCards(text)
-        assertEquals(listOf(Card.Cloze("This is text {{c1::1}}"), Card.Cloze("And this {{c1::text}} number is {{c2::2}}")), cards)
+        assertEquals(
+            listOf(
+                Card.Cloze(text = "This is text {{c1::1}}"),
+                Card.Cloze(text = "And this {{c1::text}} number is {{c2::2}}")
+            ), cards
+        )
     }
 
     @Test
@@ -47,7 +59,7 @@ class ParseTests {
             a: My answer
         """.trimIndent()
         val cards = parseCards(text)
-        assertEquals(listOf(Card.Basic("My question", "My answer")), cards)
+        assertEquals(listOf(Card.Basic(front = "My question", back = "My answer")), cards)
     }
 
     @Test
@@ -57,28 +69,28 @@ class ParseTests {
             aq: My answer
         """.trimIndent()
         val cards = parseCards(text)
-        assertEquals(listOf(Card.BasicAndReverse("My question", "My answer")), cards)
+        assertEquals(listOf(Card.BasicAndReverse(front = "My question", back = "My answer")), cards)
     }
 
     @Test
     fun `Both cloze and qa answers work`() {
         val text = """
             This is text {1}
-            
+
             qa: My question
             aq: My answer
-            
+
             q: Question 2
             a: Answer 2
-            
+
             And this {text} number is {2}
         """.trimIndent()
         val cards = parseCards(text)
         val expected = listOf(
-            Card.Cloze("This is text {{c1::1}}"),
-            Card.BasicAndReverse("My question", "My answer"),
-            Card.Basic("Question 2", "Answer 2"),
-            Card.Cloze("And this {{c1::text}} number is {{c2::2}}")
+            Card.Cloze(text = "This is text {{c1::1}}"),
+            Card.BasicAndReverse(front = "My question", back = "My answer"),
+            Card.Basic(front = "Question 2", back = "Answer 2"),
+            Card.Cloze(text = "And this {{c1::text}} number is {{c2::2}}")
         )
         assertEquals(expected, cards)
     }

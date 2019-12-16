@@ -9,18 +9,41 @@ import io.ktor.client.request.post
 import kotlinx.coroutines.coroutineScope
 
 interface CardsApi {
-    suspend fun addNote(note: NoteApi)
+    suspend fun addNote(note: NoteDataApi): NoteDataApi
+    suspend fun getNotesInDeck(deckName: String): List<NoteDataApi>
     suspend fun createDeck(name: String)
     suspend fun removeDeck(name: String)
     suspend fun getDecks(): List<String>
 }
 
 data class ResultWrapper<T>(val result: T? = null, val error: String? = null)
-data class NoteApi(
+
+data class NoteDataApi(
+    val noteId: Long = 0L, // For creation, API do not care
     val deckName: String,
     val modelName: String,
     val fields: Map<String, String>,
     val tags: List<String> = emptyList()
+)
+
+data class NoteReceiveDataApi(
+    val noteId: Long,
+    val modelName: String,
+    val fields: Map<String, OrderedField>,
+    val tags: List<String> = emptyList()
+) {
+    fun toNoteData(deckName: String): NoteDataApi = NoteDataApi(
+        noteId = noteId,
+        deckName = deckName,
+        modelName = modelName,
+        fields = fields.mapValues { it.value.value },
+        tags = tags
+    )
+}
+
+data class OrderedField(
+    val value: String,
+    val order: Int
 )
 
 class AnkiApi : CardsApi {
@@ -29,20 +52,34 @@ class AnkiApi : CardsApi {
         install(JsonFeature) {
             serializer = GsonSerializer()
         }
-//        install(Logging) {
-//            logger = Logger.DEFAULT
-//            level = LogLevel.HEADERS
-//        }
     }
 
-    override suspend fun addNote(note: NoteApi) {
+    override suspend fun getNotesInDeck(deckName: String): List<NoteDataApi> {
+        val text = client.post<String>(url) {
+            body = "{\"action\": \"findNotes\", \"version\": 6, \"params\": {\"query\": \"deck:$deckName\"}}"
+        }
+        val res = text.readObject<ResultWrapper<List<String>>>()
+        val notesIds = res.result ?: throw Error(res.error)
+        val idsAsString = notesIds.joinToString(prefix = "[", postfix = "]", separator = ", ")
+
+        val text2 = client.post<String>(url) {
+            body = "{\"action\": \"notesInfo\", \"version\": 6, \"params\": {\"notes\": $idsAsString}}"
+        }
+        val res2 = text2.readObject<ResultWrapper<List<NoteReceiveDataApi>>>()
+        return res2.result
+            ?.map { it.toNoteData(deckName) }
+            ?: throw Error(res2.error)
+    }
+
+    override suspend fun addNote(note: NoteDataApi): NoteDataApi {
         val noteStr = note.toJson()
         val text = client.post<String>(url) {
             val bodyText = "{\"action\": \"addNote\", \"version\": 6, \"params\": {\"note\": $noteStr}}"
             body = bodyText
         }
         val res = text.readObject<ResultWrapper<Long>>()
-        if (res.error != null) throw Error(res.error)
+        val id = res.result ?: throw Error(res.error)
+        return note.copy(noteId = id)
     }
 
     override suspend fun createDeck(name: String) {
@@ -86,7 +123,7 @@ a: Answer 2
 
 And this {text} number is {2}
     """.trimMargin()
-        .let(::parseCards)
+        .let { markdown -> parseCards(markdown) }
         .map { it.toNote(deckName, "My comment") }
         .filterNotNull()
         .forEach { api.addNote(it) }

@@ -5,7 +5,7 @@ import parse.BASIC_AND_REVERSED_PATTERN
 import parse.BASIC_PATTERN
 
 fun writeCards(cards: List<Card>): String = cards.joinToString(separator = "\n\n") {
-    when (it) {
+    val cardText = when (it) {
         is Card.Basic -> BASIC_PATTERN
             .replace("{front}", it.front)
             .replace("{back}", it.back)
@@ -15,4 +15,6 @@ fun writeCards(cards: List<Card>): String = cards.joinToString(separator = "\n\n
         is Card.Cloze -> it.text
         is Card.Text -> it.text
     }
+
+    "@${it.id}\n$cardText"
 }

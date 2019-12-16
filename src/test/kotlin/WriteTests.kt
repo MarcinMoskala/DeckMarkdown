@@ -1,6 +1,4 @@
 import org.junit.Test
-import parse.IncorrectFormatException
-import parse.parseCards
 import write.writeCards
 import kotlin.test.assertEquals
 
@@ -10,19 +8,21 @@ class WriteTests {
     fun `No cards produce empty`() {
         val text = writeCards(listOf())
         val expected = ""
-        assertEquals(text, text)
+        assertEquals(expected, text)
     }
 
     @Test
     fun `Cloze is stored correctly`() {
         val cards = listOf(
-            Card.Cloze("This is text {{c1::1}}"),
-            Card.Cloze("And this {{c1::text}} number is {{c2::2}}")
+            Card.Cloze("1", "This is text {{c1::1}}"),
+            Card.Cloze("2", "And this {{c1::text}} number is {{c2::2}}")
         )
         val text = writeCards(cards)
         val expected = """
+@1
 This is text {{c1::1}}
 
+@2
 And this {{c1::text}} number is {{c2::2}}
         """.trimIndent()
         assertEquals(expected, text)
@@ -31,22 +31,26 @@ And this {{c1::text}} number is {{c2::2}}
     @Test
     fun `Basic and BasisAndReversed are stored correctly`() {
         val cards = listOf(
-            Card.Basic("AAA", "BBB"),
-            Card.BasicAndReverse("EEE", "FFF"),
-            Card.BasicAndReverse("GGG", "HHH HHH HHH ;,!@#$%^&"),
-            Card.Basic("CCC", "DDD")
+            Card.Basic("1", "AAA", "BBB"),
+            Card.BasicAndReverse("2", "EEE", "FFF"),
+            Card.BasicAndReverse("3", "GGG", "HHH HHH HHH ;,!@#$%^&"),
+            Card.Basic("4", "CCC", "DDD")
         )
         val text = writeCards(cards)
         val expected = """
+@1
 q: AAA
 a: BBB
 
+@2
 qa: EEE
 aq: FFF
 
+@3
 qa: GGG
 aq: HHH HHH HHH ;,!@#${'$'}%^&
 
+@4
 q: CCC
 a: DDD
         """.trimIndent()
@@ -56,17 +60,20 @@ a: DDD
     @Test
     fun `All are stored correctly`() {
         val cards = listOf(
-            Card.Basic("AAA", "BBB"),
-            Card.Cloze("And this {{c1::text}} number is {{c2::2}}"),
-            Card.BasicAndReverse("GGG", "HHH HHH")
+            Card.Basic("1A", "AAA", "BBB"),
+            Card.Cloze("B", "And this {{c1::text}} number is {{c2::2}}"),
+            Card.BasicAndReverse("3", "GGG", "HHH HHH")
         )
         val text = writeCards(cards)
         val expected = """
+@1A
 q: AAA
 a: BBB
 
+@B
 And this {{c1::text}} number is {{c2::2}}
 
+@3
 qa: GGG
 aq: HHH HHH
         """.trimIndent()
