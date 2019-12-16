@@ -1,25 +1,25 @@
 sealed class Card {
-    abstract val id: String?
+    abstract val id: Long?
 
     data class Basic(
-        override val id: String? = null,
+        override val id: Long? = null,
         val front: String,
         val back: String
     ) : Card()
 
     data class BasicAndReverse(
-        override val id: String? = null,
+        override val id: Long? = null,
         val front: String,
         val back: String
     ) : Card()
 
     data class Cloze(
-        override val id: String? = null,
+        override val id: Long? = null,
         val text: String
     ) : Card()
 
     data class Text(
-        override val id: String? = null,
+        override val id: Long? = null,
         val text: String
     ) : Card()
 }

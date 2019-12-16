@@ -14,8 +14,8 @@ class WriteTests {
     @Test
     fun `Cloze is stored correctly`() {
         val cards = listOf(
-            Card.Cloze("1", "This is text {{c1::1}}"),
-            Card.Cloze("2", "And this {{c1::text}} number is {{c2::2}}")
+            Card.Cloze(1, "This is text {{c1::1}}"),
+            Card.Cloze(2, "And this {{c1::text}} number is {{c2::2}}")
         )
         val text = writeCards(cards)
         val expected = """
@@ -31,10 +31,10 @@ And this {{c1::text}} number is {{c2::2}}
     @Test
     fun `Basic and BasisAndReversed are stored correctly`() {
         val cards = listOf(
-            Card.Basic("1", "AAA", "BBB"),
-            Card.BasicAndReverse("2", "EEE", "FFF"),
-            Card.BasicAndReverse("3", "GGG", "HHH HHH HHH ;,!@#$%^&"),
-            Card.Basic("4", "CCC", "DDD")
+            Card.Basic(1, "AAA", "BBB"),
+            Card.BasicAndReverse(2, "EEE", "FFF"),
+            Card.BasicAndReverse(3, "GGG", "HHH HHH HHH ;,!@#$%^&"),
+            Card.Basic(4, "CCC", "DDD")
         )
         val text = writeCards(cards)
         val expected = """
@@ -60,17 +60,17 @@ a: DDD
     @Test
     fun `All are stored correctly`() {
         val cards = listOf(
-            Card.Basic("1A", "AAA", "BBB"),
-            Card.Cloze("B", "And this {{c1::text}} number is {{c2::2}}"),
-            Card.BasicAndReverse("3", "GGG", "HHH HHH")
+            Card.Basic(1, "AAA", "BBB"),
+            Card.Cloze(2, "And this {{c1::text}} number is {{c2::2}}"),
+            Card.BasicAndReverse(3, "GGG", "HHH HHH")
         )
         val text = writeCards(cards)
         val expected = """
-@1A
+@1
 q: AAA
 a: BBB
 
-@B
+@2
 And this {{c1::text}} number is {{c2::2}}
 
 @3

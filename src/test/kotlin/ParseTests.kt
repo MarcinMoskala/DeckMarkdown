@@ -10,7 +10,7 @@ class ParseTests {
         for (wholeText in texts) {
             val text = wholeText.substringAfter("\n")
             val cards = parseCards(wholeText)
-            assertEquals(listOf(Card.Text("1", text)), cards)
+            assertEquals(listOf(Card.Text(1, text)), cards)
         }
     }
 
@@ -26,22 +26,22 @@ class ParseTests {
         for (wholeText in texts) {
             val text = wholeText.substringAfter("\n")
             val cards = parseCards(wholeText)
-            assertEquals(listOf(Card.Text("1", text)), cards)
+            assertEquals(listOf(Card.Text(1, text)), cards)
         }
     }
 
     @Test
     fun `Text string with cloze produces a cloze card`() {
-        val cards = parseCards("Lorem {ipsum} est")
+        val cards = parseCards("Lorem {{c1::ipsum}} est")
         assertEquals(listOf(Card.Cloze(text = "Lorem {{c1::ipsum}} est")), cards)
     }
 
     @Test
     fun `We can have multiple clozes and they are separated by an empty line`() {
         val text = """
-            This is text {1}
+            This is text {{c1::1}}
 
-            And this {text} number is {2}
+            And this {{c1::text}} number is {{c2::2}}
         """.trimIndent()
         val cards = parseCards(text)
         assertEquals(
@@ -75,7 +75,7 @@ class ParseTests {
     @Test
     fun `Both cloze and qa answers work`() {
         val text = """
-            This is text {1}
+            This is text {{c1::1}}
 
             qa: My question
             aq: My answer
@@ -83,7 +83,7 @@ class ParseTests {
             q: Question 2
             a: Answer 2
 
-            And this {text} number is {2}
+            And this {{c1::text}} number is {{c2::2}}
         """.trimIndent()
         val cards = parseCards(text)
         val expected = listOf(

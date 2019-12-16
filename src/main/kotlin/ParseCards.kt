@@ -1,18 +1,15 @@
 package parse
 
 import Card
-import java.lang.Exception
 import java.lang.IllegalArgumentException
-import kotlin.contracts.contract
-import kotlin.random.Random
 
-val BRACKET_REGEX = "\\{([^}]+)}".toRegex()
+val BRACKET_REGEX = "\\{\\{([^:]+::[^}]+)}}".toRegex()
 const val BASIC_PATTERN = "q: {front}\na: {back}"
 val BASIC_REGEX = "q: ([^\\n]+)\\na: ([^\\n]+)".toRegex()
 const val BASIC_AND_REVERSED_PATTERN = "qa: {front}\naq: {back}"
 val BASIC_AND_REVERSED_REGEX = "qa: ([^\\n]+)\\naq: ([^\\n]+)".toRegex()
 
-fun parseCards(markdown: String, random: Random = Random): List<Card> {
+fun parseCards(markdown: String): List<Card> {
     val slitted = markdown.split("\n\n")
     return slitted.asSequence()
         .map { it.trimStart().trimEnd() }
@@ -20,7 +17,7 @@ fun parseCards(markdown: String, random: Random = Random): List<Card> {
             if (paragraph.startsWith("@")) {
                 require(paragraph.contains("\n")) { "Nothing after id in the paragraph $paragraph" }
                 val (idLine, cardText) = paragraph.split("\n", limit = 2)
-                CardTextWithId(idLine.substringAfter("@"), cardText)
+                CardTextWithId(idLine.substringAfter("@").toLongOrNull(), cardText)
             } else {
                 CardTextWithId(null, paragraph)
             }
@@ -35,23 +32,14 @@ fun parseCards(markdown: String, random: Random = Random): List<Card> {
                     val (question, answer) = parseQA(cardText, BASIC_AND_REVERSED_REGEX)
                     Card.BasicAndReverse(id, question, answer)
                 }
-                BRACKET_REGEX in cardText -> Card.Cloze(id, cardText.processCloze())
+                BRACKET_REGEX in cardText -> Card.Cloze(id, cardText)
                 else -> Card.Text(id, cardText)
             }
         }
         .toList()
 }
 
-private data class CardTextWithId(val id: String?, val cardText: String)
-
-private fun String.processCloze(): String {
-    var num = 0
-    return this.replace(BRACKET_REGEX) { matchResult: MatchResult ->
-        val content = matchResult.groupValues[1]
-        num++
-        "{{c$num::$content}}"
-    }
-}
+private data class CardTextWithId(val id: Long?, val cardText: String)
 
 private fun parseQA(text: String, regex: Regex): Pair<String, String> =
     regex

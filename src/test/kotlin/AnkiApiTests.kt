@@ -1,7 +1,7 @@
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import parse.AnkiApi
-import parse.toNote
+import parse.toApiNote
 import kotlin.random.Random
 import kotlin.test.assertEquals
 
@@ -27,8 +27,8 @@ class AnkiApiTests {
     @Test
     fun `After notes added they exists, after removed, not anymore`() = runBlocking {
         val deckName = "MyName"
-        val notes = listOf(Card.BasicAndReverse("1", "AAA", "BBB"))
-            .map { it.toNote(deckName, "") }
+        val notes = listOf(Card.BasicAndReverse(1, "AAA", "BBB"))
+            .map { it.toApiNote(deckName, "") }
         try {
             api.createDeck(deckName)
             assertDeckAdded(deckName)
@@ -55,6 +55,6 @@ class AnkiApiTests {
     @Test // Same for incorrect names
     fun `Adding to a deck that does not exist causes error throw`() = runBlocking {
         val deckName = "MyNameKOKOKOKOKO" + Random.nextInt()
-        assertThrows<Error> { api.addNote(Card.Cloze("1", "AAA").toNote(deckName, "")!!) }
+        assertThrows<Error> { api.addNote(Card.Cloze(1, "AAA").toApiNote(deckName, "")!!) }
     }
 }

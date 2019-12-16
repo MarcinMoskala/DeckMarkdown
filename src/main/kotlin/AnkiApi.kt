@@ -10,6 +10,7 @@ import kotlinx.coroutines.coroutineScope
 
 interface CardsApi {
     suspend fun addNote(note: NoteDataApi): NoteDataApi
+    suspend fun updateNoteFields(note: NoteDataApi): NoteDataApi
     suspend fun getNotesInDeck(deckName: String): List<NoteDataApi>
     suspend fun createDeck(name: String)
     suspend fun removeDeck(name: String)
@@ -19,12 +20,18 @@ interface CardsApi {
 data class ResultWrapper<T>(val result: T? = null, val error: String? = null)
 
 data class NoteDataApi(
-    val noteId: Long = 0L, // For creation, API do not care
+    val noteId: Long = NO_ID, // For creation, API do not care
     val deckName: String,
     val modelName: String,
     val fields: Map<String, String>,
     val tags: List<String> = emptyList()
-)
+) {
+    val hasId get() = noteId != NO_ID
+
+    companion object {
+        const val NO_ID = -1L
+    }
+}
 
 data class NoteReceiveDataApi(
     val noteId: Long,
@@ -82,6 +89,17 @@ class AnkiApi : CardsApi {
         return note.copy(noteId = id)
     }
 
+    override suspend fun updateNoteFields(note: NoteDataApi): NoteDataApi {
+        val fieldsStr = note.fields.toJson()
+        val text = client.post<String>(url) {
+            val bodyText = "{\"action\": \"updateNoteFields\", \"version\": 6, \"params\": {\"id\": ${note.noteId}, \"fields\": $fieldsStr}}"
+            body = bodyText
+        }
+        val res = text.readObject<ResultWrapper<Any?>>()
+        if (res.error != null) throw Error(res.error)
+        return note
+    }
+
     override suspend fun createDeck(name: String) {
         val text = client.post<String>(url) {
             body = "{\"action\": \"createDeck\", \"version\": 6, \"params\": {\"deck\": \"$name\"}}"
@@ -124,7 +142,7 @@ a: Answer 2
 And this {text} number is {2}
     """.trimMargin()
         .let { markdown -> parseCards(markdown) }
-        .map { it.toNote(deckName, "My comment") }
+        .map { it.toApiNote(deckName, "My comment") }
         .filterNotNull()
         .forEach { api.addNote(it) }
 }
