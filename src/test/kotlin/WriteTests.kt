@@ -1,5 +1,5 @@
+import io.writeCards
 import org.junit.Test
-import write.writeCards
 import kotlin.test.assertEquals
 
 class WriteTests {

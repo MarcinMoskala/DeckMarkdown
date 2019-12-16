@@ -1,6 +1,6 @@
 import org.junit.Test
-import parse.parseCards
-import write.writeCards
+import io.parseCards
+import io.writeCards
 import kotlin.test.assertEquals
 
 class ProcessTests {

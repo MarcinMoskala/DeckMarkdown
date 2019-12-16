@@ -1,11 +1,13 @@
 package parse
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.post
+import io.parseCards
 import kotlinx.coroutines.coroutineScope
 
 interface CardsApi {
@@ -14,6 +16,7 @@ interface CardsApi {
     suspend fun getNotesInDeck(deckName: String): List<NoteDataApi>
     suspend fun createDeck(name: String)
     suspend fun removeDeck(name: String)
+    suspend fun deleteNotes(ids: List<Long>)
     suspend fun getDecks(): List<String>
 }
 
@@ -92,11 +95,11 @@ class AnkiApi : CardsApi {
     override suspend fun updateNoteFields(note: NoteDataApi): NoteDataApi {
         val fieldsStr = note.fields.toJson()
         val text = client.post<String>(url) {
-            val bodyText = "{\"action\": \"updateNoteFields\", \"version\": 6, \"params\": {\"id\": ${note.noteId}, \"fields\": $fieldsStr}}"
+            val bodyText = "{\"action\": \"updateNoteFields\", \"version\": 6, \"params\": { \"note\": { \"id\": ${note.noteId}, \"fields\": $fieldsStr}}}"
             body = bodyText
         }
-        val res = text.readObject<ResultWrapper<Any?>>()
-        if (res.error != null) throw Error(res.error)
+        val res = text.readObjectOrNull<ResultWrapper<Any?>>()
+        if (res?.error != null) throw Error(res.error)
         return note
     }
 
@@ -117,6 +120,16 @@ class AnkiApi : CardsApi {
         if (res.error != null) throw Error(res.error)
     }
 
+    override suspend fun deleteNotes(ids: List<Long>) {
+        val idsAsString = ids.joinToString(prefix = "[", postfix = "]", separator = ", ")
+        val text = client.post<String>(url) {
+            val bodyText = "{\"action\": \"deleteNotes\", \"version\": 6, \"params\": {\"notes\": $idsAsString}}"
+            body = bodyText
+        }
+        val res = text.readObjectOrNull<ResultWrapper<Any?>>()
+        if (res?.error != null) throw Error(res.error)
+    }
+
     override suspend fun getDecks(): List<String> {
         val text = client.post<String>(url) {
             body = "{\"action\": \"deckNames\", \"version\": 6}"
@@ -126,28 +139,12 @@ class AnkiApi : CardsApi {
     }
 }
 
-suspend fun main() = coroutineScope {
-    val api = AnkiApi()
-    val deckName = "MyNewDeck"
-    api.createDeck(deckName)
-    """
-This is text {1}
-
-qa: My question
-aq: My answer
-
-q: Question 2 
-a: Answer 2
-
-And this {text} number is {2}
-    """.trimMargin()
-        .let { markdown -> parseCards(markdown) }
-        .map { it.toApiNote(deckName, "My comment") }
-        .filterNotNull()
-        .forEach { api.addNote(it) }
-}
+inline fun <reified T> String.readObjectOrNull(): T? =
+    gson.fromJson<T>(this, object : TypeToken<T>() {}.type)
 
 inline fun <reified T> String.readObject(): T =
-    Gson().fromJson<T>(this, object : TypeToken<T>() {}.type) ?: error("Cannot parse $this")
+    gson.fromJson<T>(this, object : TypeToken<T>() {}.type) ?: error("Cannot parse $this")
+
+val gson = GsonBuilder().serializeNulls().create()
 
 fun Any.toJson(): String = Gson().toJson(this)

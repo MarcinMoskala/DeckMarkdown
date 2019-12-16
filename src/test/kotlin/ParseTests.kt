@@ -1,5 +1,5 @@
 import org.junit.Test
-import parse.parseCards
+import io.parseCards
 import kotlin.test.assertEquals
 
 class ParseTests {
@@ -60,6 +60,18 @@ class ParseTests {
         """.trimIndent()
         val cards = parseCards(text)
         assertEquals(listOf(Card.Basic(front = "My question", back = "My answer")), cards)
+    }
+
+    @Test
+    fun `Multiline questions and answers works fine`() {
+        val text = """
+            q: My question
+            Line 2
+            a: My answer
+            line 2
+        """.trimIndent()
+        val cards = parseCards(text)
+        assertEquals(listOf(Card.Basic(front = "My question\nLine 2", back = "My answer\nline 2")), cards)
     }
 
     @Test
