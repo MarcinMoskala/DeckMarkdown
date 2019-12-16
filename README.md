@@ -84,7 +84,7 @@ Types that should be introduced:
 
 ### Anki Connect
 
-Program uses (Anki Connect)[https://github.com/FooSoft/anki-connect]. Install it in your Anki, and for this program to work correctly Anki needs to be open. 
+Program uses [Anki Connect](https://github.com/FooSoft/anki-connect). Install it in your Anki, and for this program to work correctly Anki needs to be open. 
 
 ### Usage
 
