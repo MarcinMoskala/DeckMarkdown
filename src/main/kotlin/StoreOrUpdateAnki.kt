@@ -6,7 +6,7 @@ import java.io.File
 
 suspend fun main() = coroutineScope<Unit> {
     val api = AnkiApi()
-    val deckName = "Wiedza::Techniczne::GoogleInterview"
+    val deckName = "AAAA"
     val comment = ""
     api.createDeck(deckName)
 //    File("DeckData")
