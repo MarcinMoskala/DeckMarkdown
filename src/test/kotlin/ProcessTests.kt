@@ -29,6 +29,5 @@ class ProcessTests {
             val processed = writeCards(cards)
             assertEquals(text, processed)
         }
-
     }
 }

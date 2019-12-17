@@ -31,10 +31,11 @@ fun Card.toApiNote(deckName: String, comment: String): NoteDataApi = when (this)
 }
 
 fun NoteDataApi.toNote() = when (modelName) {
-    "Basic" -> Card.Basic(noteId, fields.getValue("Front"), fields.getValue("Back"))
-    "Basic (and reversed card)" -> Card.BasicAndReverse(noteId, fields.getValue("Front"), fields.getValue("Back"))
-    "Cloze" -> Card.Cloze(noteId, fields.getValue("Text"))
-    "Text" -> Card.Text(noteId, fields.getValue("Text"))
-    "基础" -> Card.Basic(noteId, fields.getValue("正面"), fields.getValue("背面"))
+    "Basic" -> Card.Basic(noteId, fields.getValue("Front").removeMultipleBreaks(), fields.getValue("Back").removeMultipleBreaks())
+    "Basic (and reversed card)" -> Card.BasicAndReverse(noteId, fields.getValue("Front").removeMultipleBreaks(), fields.getValue("Back").removeMultipleBreaks())
+    "Cloze" -> Card.Cloze(noteId, fields.getValue("Text").removeMultipleBreaks())
+    "Text" -> Card.Text(noteId, fields.getValue("Text").removeMultipleBreaks())
     else -> error("Unknown card type $this")
 }
+
+fun String.removeMultipleBreaks() = replace("\\n+".toRegex(), "\n")
