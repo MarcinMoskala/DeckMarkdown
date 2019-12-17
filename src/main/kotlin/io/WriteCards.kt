@@ -2,6 +2,9 @@ package io
 
 import Card
 
+const val BASIC_PATTERN = "q: {front}\na: {back}"
+const val BASIC_AND_REVERSED_PATTERN = "qa: {front}\naq: {back}"
+
 fun writeCards(cards: List<Card>): String = cards.joinToString(separator = "\n\n") {
     val head = if(it.id == null) "" else "@${it.id}\n"
     val cardText = when (it) {

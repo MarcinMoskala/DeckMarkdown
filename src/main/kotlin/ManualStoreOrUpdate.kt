@@ -29,5 +29,6 @@ q: Once the validation data has been used, can it be bundled back into the train
 a: Yes. To retrain that learning scheme, maximizing the use of data.
     """.trimMargin()
     storeOrUpdateNote(api, deckName, noteContent, comment)
+        .processedText
         .let(::print)
 }

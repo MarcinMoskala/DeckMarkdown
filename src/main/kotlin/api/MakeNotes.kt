@@ -30,7 +30,7 @@ fun Card.toApiNote(deckName: String, comment: String): NoteDataApi = when (this)
     )
 }
 
-fun NoteDataApi.toNote() = when (modelName) {
+fun NoteDataApi.toApiNote() = when (modelName) {
     "Basic" -> Card.Basic(noteId, fields.getValue("Front").removeMultipleBreaks(), fields.getValue("Back").removeMultipleBreaks())
     "Basic (and reversed card)" -> Card.BasicAndReverse(noteId, fields.getValue("Front").removeMultipleBreaks(), fields.getValue("Back").removeMultipleBreaks())
     "Cloze" -> Card.Cloze(noteId, fields.getValue("Text").removeMultipleBreaks())

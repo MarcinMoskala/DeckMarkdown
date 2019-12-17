@@ -3,12 +3,10 @@ package io
 import Card
 import java.lang.IllegalArgumentException
 
-val CLOZE_REGEX = "\\{\\{([^:]+::[^}]+)}}".toRegex()
+val CLOZE_REGEX = "\\{\\{([^:]+::([^}]+))}}".toRegex()
 val STANDALONE_BRACKET_REGEX = "\\{([^}{]+)}".toRegex()
 
-const val BASIC_PATTERN = "q: {front}\na: {back}"
 val BASIC_REGEX = "q: ([\\s\\S]+)\\na: ([\\s\\S]+)".toRegex()
-const val BASIC_AND_REVERSED_PATTERN = "qa: {front}\naq: {back}"
 val BASIC_AND_REVERSED_REGEX = "qa: ([\\s\\S]+)\\naq: ([\\s\\S]+)".toRegex()
 
 fun parseCards(markdown: String): List<Card> {

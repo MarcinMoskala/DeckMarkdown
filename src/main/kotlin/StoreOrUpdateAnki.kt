@@ -1,8 +1,11 @@
+import io.htmlWriteCards
 import io.parseCards
 import io.writeCards
 import kotlinx.coroutines.coroutineScope
 import parse.*
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
 
 suspend fun main() = coroutineScope<Unit> {
     val api = AnkiApi()
@@ -10,25 +13,42 @@ suspend fun main() = coroutineScope<Unit> {
     check(notesFile.exists())
     check(notesFile.isDirectory)
 
+    val htmlNotesFile = File("notesHtml")
+
     val files = notesFile.listFiles()!!
     for (file in files) {
         val name = file.name
         val body = file.readText()
-        val processed = storeOrUpdateNote(api = api, deckName = name, noteContent = body, comment = "")
-        file.writeText(processed)
+        val (cards, processedText) = storeOrUpdateNote(api = api, deckName = name, noteContent = body, comment = "")
+        file.writeText(processedText)
+
+        if(htmlNotesFile.exists() && htmlNotesFile.isDirectory) {
+            val expectedFile = File("${htmlNotesFile.absolutePath}/$name.html")
+            val htmlFile =
+                if(expectedFile.exists()) expectedFile
+                else Files.createFile(expectedFile.toPath()).toFile()
+
+            val html = htmlWriteCards(cards)
+            htmlFile.writeText(html)
+        }
     }
 
     print("Done")
 }
 
-suspend fun storeOrUpdateNote(api: AnkiApi, deckName: String, noteContent: String, comment: String): String {
+data class UpdateResult(val cards: List<Card>, val processedText: String)
+
+suspend fun storeOrUpdateNote(api: AnkiApi, deckName: String, noteContent: String, comment: String): UpdateResult {
     api.createDeck(deckName)
-    return noteContent
-        .let { markdown -> parseCards(markdown) }
+    val cards = parseCards(noteContent)
+
+    val processedCards = cards
         .map { it.toApiNote(deckName, comment) }
         .let { cards -> storeOrUpdateCards(api, deckName, cards) }
-        .map { it.toNote() }
+        .map { it.toApiNote() }
         .let(::writeCards)
+
+    return UpdateResult(cards, processedCards)
 }
 
 suspend fun storeOrUpdateCards(api: AnkiApi, deckName: String, cards: List<NoteDataApi>): List<NoteDataApi> {
