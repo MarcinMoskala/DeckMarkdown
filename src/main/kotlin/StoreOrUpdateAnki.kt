@@ -11,6 +11,12 @@ import java.nio.file.Files
 
 suspend fun main() = coroutineScope<Unit> {
     val api = AnkiApi()
+
+    if(!api.connected()) {
+        print("This function requires opened Anki with installed Anki Connect plugin. Details in ReadMe.md")
+        return@coroutineScope
+    }
+
     val notesFile = File("notes")
     check(notesFile.exists())
     check(notesFile.isDirectory)
