@@ -61,13 +61,20 @@ suspend fun storeOrUpdateCards(api: AnkiApi, deckName: String, cards: List<NoteD
     val removedCardIds = currentIds - cards.map { it.noteId }
     api.deleteNotes(removedCardIds)
 
+    val removedCount = removedCardIds.size
+    var addedCount = 0
+    var updatedCount = 0
     val newCards = cards.map {
         if (it.hasId && it.noteId in currentIds) {
+            updatedCount++
             api.updateNoteFields(it)
         } else {
+            addedCount++
             api.addNote(it)
         }
     }
+
+    println("In deck $deckName added $addedCount, updated $updatedCount, removed $removedCount")
     return newCards
 }
 
