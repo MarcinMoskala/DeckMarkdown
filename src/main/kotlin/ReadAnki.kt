@@ -5,7 +5,7 @@ import parse.toNote
 
 suspend fun main() = coroutineScope<Unit> {
     val api = AnkiApi()
-    val deckName = "AAA"
+    val deckName = "Wiedza::Techniczne::GoogleInterview"
     val text = api.getNotesInDeck(deckName)
         .map { it.toNote() }
         .let(::writeCards)

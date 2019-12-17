@@ -33,7 +33,7 @@ class AnkiApiTests {
             api.createDeck(deckName)
             assertDeckAdded(deckName)
 
-            val addedCards = notes.filterNotNull().map { api.addNote(it) }
+            val addedCards = notes.map { api.addNote(it) }
             val notesInDeck = api.getNotesInDeck(deckName)
             assertEquals(addedCards, notesInDeck)
         } finally {
@@ -55,6 +55,6 @@ class AnkiApiTests {
     @Test // Same for incorrect names
     fun `Adding to a deck that does not exist causes error throw`() = runBlocking {
         val deckName = "MyNameKOKOKOKOKO" + Random.nextInt()
-        assertThrows<Error> { api.addNote(Card.Cloze(1, "AAA").toApiNote(deckName, "")!!) }
+        assertThrows<Error> { api.addNote(Card.Cloze(1, "AAA").toApiNote(deckName, "")) }
     }
 }

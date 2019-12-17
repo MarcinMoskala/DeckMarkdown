@@ -7,8 +7,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.post
-import io.parseCards
-import kotlinx.coroutines.coroutineScope
 
 interface CardsApi {
     suspend fun addNote(note: NoteDataApi): NoteDataApi

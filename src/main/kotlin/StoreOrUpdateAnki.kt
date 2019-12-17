@@ -6,42 +6,44 @@ import java.io.File
 
 suspend fun main() = coroutineScope<Unit> {
     val api = AnkiApi()
-    val deckName = "AAAA"
-    val comment = ""
+    val notesFile = File("notes")
+    check(notesFile.exists())
+    check(notesFile.isDirectory)
+
+    val files = notesFile.listFiles()!!
+    for (file in files) {
+        val name = file.name
+        val body = file.readText()
+        val processed = storeOrUpdateNote(api = api, deckName = name, noteContent = body, comment = "")
+        file.writeText(processed)
+    }
+
+    print("Done")
+}
+
+suspend fun storeOrUpdateNote(api: AnkiApi, deckName: String, noteContent: String, comment: String): String {
     api.createDeck(deckName)
-//    File("DeckData")
-//        .readText()
-    """
-This is text {{c1::1}}
-
-qa: My question
-aq: My answer
-
-q: Question 2
-a: Answer 2
-
-And this {{c1::text}} number is {{c2::2}}
-    """.trimMargin()
+    return noteContent
         .let { markdown -> parseCards(markdown) }
         .map { it.toApiNote(deckName, comment) }
         .let { cards -> storeOrUpdateCards(api, deckName, cards) }
         .map { it.toNote() }
         .let(::writeCards)
-        .let(::print)
 }
 
 suspend fun storeOrUpdateCards(api: AnkiApi, deckName: String, cards: List<NoteDataApi>): List<NoteDataApi> {
     val currentCards = api.getNotesInDeck(deckName)
-    val currentNoteIds = currentCards.map { it.noteId }.toMutableList()
+    val currentIds = currentCards.map { it.noteId }
+
+    val removedCardIds = currentIds - cards.map { it.noteId }
+    api.deleteNotes(removedCardIds)
+
     val newCards = cards.map {
-        if (it.hasId && it.noteId in currentNoteIds) {
-            currentNoteIds -= it.noteId
+        if (it.hasId && it.noteId in currentIds) {
             api.updateNoteFields(it)
         } else {
             api.addNote(it)
         }
     }
-    // Delete cards not present
-    api.deleteNotes(currentNoteIds)
     return newCards
 }
