@@ -1,4 +1,6 @@
 import kotlinx.coroutines.runBlocking
+import org.junit.Assume.assumeTrue
+import org.junit.Before
 import org.junit.Test
 import parse.AnkiApi
 import parse.toApiNote
@@ -8,6 +10,11 @@ import kotlin.test.assertEquals
 class AnkiApiTests {
 
     val api = AnkiApi()
+
+    @Before
+    fun beforeMethod() = runBlocking {
+         assumeTrue(api.connected())
+    }
 
     @Test
     fun `After deck added it exists, after removed, not anymore`() = runBlocking {

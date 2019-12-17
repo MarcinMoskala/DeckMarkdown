@@ -7,8 +7,10 @@ import io.ktor.client.HttpClient
 import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.post
+import java.net.ConnectException
 
 interface CardsApi {
+    suspend fun connected() : Boolean
     suspend fun addNote(note: NoteDataApi): NoteDataApi
     suspend fun updateNoteFields(note: NoteDataApi): NoteDataApi
     suspend fun getNotesInDeck(deckName: String): List<NoteDataApi>
@@ -60,6 +62,13 @@ class AnkiApi : CardsApi {
         install(JsonFeature) {
             serializer = GsonSerializer()
         }
+    }
+
+    override suspend fun connected() : Boolean = try {
+        client.post<Any?>(url)
+        true
+    } catch (connectException: ConnectException) {
+        false
     }
 
     override suspend fun getNotesInDeck(deckName: String): List<NoteDataApi> {
