@@ -1,11 +1,13 @@
 import io.htmlWriteCards
 import io.parseCards
+import io.textWriteCards
 import io.writeCards
 import kotlinx.coroutines.coroutineScope
-import parse.*
+import parse.AnkiApi
+import parse.NoteDataApi
+import parse.toApiNote
 import java.io.File
 import java.nio.file.Files
-import java.nio.file.Paths
 
 suspend fun main() = coroutineScope<Unit> {
     val api = AnkiApi()
@@ -23,13 +25,8 @@ suspend fun main() = coroutineScope<Unit> {
         file.writeText(processedText)
 
         if(htmlNotesFile.exists() && htmlNotesFile.isDirectory) {
-            val expectedFile = File("${htmlNotesFile.absolutePath}/$name.html")
-            val htmlFile =
-                if(expectedFile.exists()) expectedFile
-                else Files.createFile(expectedFile.toPath()).toFile()
-
-            val html = htmlWriteCards(cards)
-            htmlFile.writeText(html)
+            writeHtml(htmlNotesFile, name, cards)
+            writeFormattedText(htmlNotesFile, name, cards)
         }
     }
 
@@ -66,4 +63,28 @@ suspend fun storeOrUpdateCards(api: AnkiApi, deckName: String, cards: List<NoteD
         }
     }
     return newCards
+}
+
+private fun writeHtml(formattedNotesFile: File, name: String, cards: List<Card>) {
+    val expectedFile = File("${formattedNotesFile.absolutePath}/$name.html")
+    val htmlFile =
+        if (expectedFile.exists()) expectedFile
+        else Files.createFile(expectedFile.toPath()).toFile()
+
+    val html = htmlWriteCards(cards)
+    htmlFile.writeText(html)
+}
+
+private fun writeFormattedText(
+    formattedNotesFile: File,
+    name: String,
+    cards: List<Card>
+) {
+    val expectedFile = File("${formattedNotesFile.absolutePath}/$name")
+    val htmlFile =
+        if (expectedFile.exists()) expectedFile
+        else Files.createFile(expectedFile.toPath()).toFile()
+
+    val text = textWriteCards(cards)
+    htmlFile.writeText(text)
 }
