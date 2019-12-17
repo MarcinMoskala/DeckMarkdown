@@ -27,3 +27,55 @@ a: Yes, there is nothing wrong with this: it is just a way of maximizing the amo
 @1576577482185
 q: Once the validation data has been used, can it be bundled back into the training data?
 a: Yes. To retrain that learning scheme, maximizing the use of data.
+
+@1576600287037
+qa: Bernoulli process
+aq: In statistics, a succession of independent events that either succeed or fail. The classic example is coin tossing. Each toss is an independent event.
+
+@1576600287117
+qa: Test set stratification
+aq: When we balance samples in the test set to have each category properly represented.
+
+@1576600287174
+q: Stratified holdout vs repeated holdout method of error rate estimation
+a: In stratified holdout we test once, with balanced test set. In repeated holdout we test multiple times on multiple test sets.
+
+@1576600287224
+qa: Cross-validation
+aq: When we calculate the model many times every time on a different training set, and then test on a different test set. As a result we have unbiased success rate estimation.
+
+@1576600287276
+qa: Leave-one-out validation
+aq: Simply n-fold cross-validation, where n is the number of instances in the dataset. Each instance in turn is left out, and the learning method is trained on all the remaining instances
+
+@1576600287340
+q: The problem with leave-one-out validation
+a: Apart from the computational expense, it always teats on unstratified test set. A dramatic, although highly artificial, illustration of the problems this might cause is to imagine a classes. The best that an inducer can do with random data is to predict the majority class, giving a true error rate of 50%. But in each fold of leave-oneout, the opposite class to the test instance is in the majority—and therefore the predictions will always be incorrect, leading to an estimated error rate of 100%!completely random dataset that contains the same number of each of two
+
+@1576600287381
+qa: The bootstrap validation
+aq: For this, a dataset of n instances is sampled n times, with replacement, to give another dataset of n instances. Because some elements in this second dataset will (almost certainly) be repeated, there must be some instances in the original dataset that have not been picked: we will use these as test instances
+
+@1576600287466
+qa: Mean squared error
+aq: Mean of the difference between prediction and actual value, squared
+
+@1576600287514
+qa: Square operation x
+aq: x * x (name)
+
+@1576600287580
+q: 25 square
+a: 625
+
+@1576600287639
+qa: Square root x
+aq: sqrt(x), or y where y * y = x
+
+@1576600287702
+q: Square root of 25
+a: 5
+
+@1576600287736
+qa: Quadratic loss function
+aq: Sum of the differences between label probability and it being chosen or not (0 or 1). So if 3 classes, y_true = [b, a] then a = [[0, 1, 0], [1, 0, 0]]. If predicted probabilities are [[0.25, 0.5, 0.25], [0.75, 0.25, 0]] then the result is 0.25^2 + 0.5^2 + 0.25^2 + 0.25^2 + 0.25^2 = 0.375 + 0.125 = 0.5
