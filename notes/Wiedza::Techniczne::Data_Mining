@@ -79,3 +79,31 @@ a: 5
 @1576600287736
 qa: Quadratic loss function
 aq: Sum of the differences between label probability and it being chosen or not (0 or 1). So if 3 classes, y_true = [b, a] then a = [[0, 1, 0], [1, 0, 0]]. If predicted probabilities are [[0.25, 0.5, 0.25], [0.75, 0.25, 0]] then the result is 0.25^2 + 0.5^2 + 0.25^2 + 0.25^2 + 0.25^2 = 0.375 + 0.125 = 0.5
+
+@1576612876401
+qa: Informational loss function
+aq: Sum of -log2 p of the chosen class. We want to minimize it - the higher probabiliy the closer to 0, The lower probability, the bigger the loss is.
+
+@1576612876502
+qa: True positiove
+aq: Classified correctly as yes
+
+@1576612876554
+qa: True negative
+aq: Classified correctly as no
+
+@1576612876602
+qa: False positiove
+aq: Classified incorrectly as yes
+
+@1576612876650
+qa: False negative
+aq: Classified incorrectly as no
+
+@1576612876700
+qa: Confusion matrix
+aq: Matrix in which element shows the number of test examples for which the actual class is the row and the predicted class is the column.
+
+@1576612876750
+q: What does Kappa statistic measuer?
+a: The agreement between two confusion matrixes
