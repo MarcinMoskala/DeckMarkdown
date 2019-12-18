@@ -1,4 +1,4 @@
-import io.writeCards
+import io.writeNotes
 import kotlinx.coroutines.coroutineScope
 import parse.AnkiApi
 import parse.toApiNote
@@ -8,7 +8,7 @@ suspend fun main() = coroutineScope<Unit> {
     val deckName = "Wiedza::Techniczne::GoogleInterview"
     val text = api.getNotesInDeck(deckName)
         .map { it.toApiNote() }
-        .let(::writeCards)
+        .let(::writeNotes)
 
     print(text)
 }

@@ -1,7 +1,7 @@
-import io.htmlWriteCards
-import io.parseCards
-import io.textWriteCards
-import io.writeCards
+import io.htmlWriteNotes
+import io.parseNotes
+import io.textWriteNotes
+import io.writeNotes
 import kotlinx.coroutines.coroutineScope
 import parse.AnkiApi
 import parse.NoteDataApi
@@ -27,44 +27,44 @@ suspend fun main() = coroutineScope<Unit> {
     for (file in files) {
         val name = file.name
         val body = file.readText()
-        val (cards, processedText) = storeOrUpdateNote(api = api, deckName = name, noteContent = body, comment = "")
+        val (notes, processedText) = storeOrUpdateNote(api = api, deckName = name, noteContent = body, comment = "")
         file.writeText(processedText)
 
         if(htmlNotesFile.exists() && htmlNotesFile.isDirectory) {
-            writeHtml(htmlNotesFile, name, cards)
-            writeFormattedText(htmlNotesFile, name, cards)
+            writeHtml(htmlNotesFile, name, notes)
+            writeFormattedText(htmlNotesFile, name, notes)
         }
     }
 
     print("Done")
 }
 
-data class UpdateResult(val cards: List<Card>, val processedText: String)
+data class UpdateResult(val notes: List<Note>, val processedText: String)
 
 suspend fun storeOrUpdateNote(api: AnkiApi, deckName: String, noteContent: String, comment: String): UpdateResult {
     api.createDeck(deckName)
-    val cards = parseCards(noteContent)
+    val notes = parseNotes(noteContent)
 
-    val processedCards = cards
+    val processedNotes = notes
         .map { it.toApiNote(deckName, comment) }
-        .let { cards -> storeOrUpdateCards(api, deckName, cards) }
+        .let { apiNote -> storeOrUpdateCards(api, deckName, apiNote) }
         .map { it.toApiNote() }
-        .let(::writeCards)
+        .let(::writeNotes)
 
-    return UpdateResult(cards, processedCards)
+    return UpdateResult(notes, processedNotes)
 }
 
-suspend fun storeOrUpdateCards(api: AnkiApi, deckName: String, cards: List<NoteDataApi>): List<NoteDataApi> {
+suspend fun storeOrUpdateCards(api: AnkiApi, deckName: String, notes: List<NoteDataApi>): List<NoteDataApi> {
     val currentCards = api.getNotesInDeck(deckName)
     val currentIds = currentCards.map { it.noteId }
 
-    val removedCardIds = currentIds - cards.map { it.noteId }
+    val removedCardIds = currentIds - notes.map { it.noteId }
     api.deleteNotes(removedCardIds)
 
     val removedCount = removedCardIds.size
     var addedCount = 0
     var updatedCount = 0
-    val newCards = cards.map {
+    val newCards = notes.map {
         if (it.hasId && it.noteId in currentIds) {
             updatedCount++
             api.updateNoteFields(it)
@@ -78,26 +78,26 @@ suspend fun storeOrUpdateCards(api: AnkiApi, deckName: String, cards: List<NoteD
     return newCards
 }
 
-private fun writeHtml(formattedNotesFile: File, name: String, cards: List<Card>) {
+private fun writeHtml(formattedNotesFile: File, name: String, notes: List<Note>) {
     val expectedFile = File("${formattedNotesFile.absolutePath}/$name.html")
     val htmlFile =
         if (expectedFile.exists()) expectedFile
         else Files.createFile(expectedFile.toPath()).toFile()
 
-    val html = htmlWriteCards(cards)
+    val html = htmlWriteNotes(notes)
     htmlFile.writeText(html)
 }
 
 private fun writeFormattedText(
     formattedNotesFile: File,
     name: String,
-    cards: List<Card>
+    notes: List<Note>
 ) {
     val expectedFile = File("${formattedNotesFile.absolutePath}/$name")
     val htmlFile =
         if (expectedFile.exists()) expectedFile
         else Files.createFile(expectedFile.toPath()).toFile()
 
-    val text = textWriteCards(cards)
+    val text = textWriteNotes(notes)
     htmlFile.writeText(text)
 }

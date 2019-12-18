@@ -5,19 +5,19 @@ This is my pet project where I experiment with my own markdown for Anki.
 ## The idea
 
 Anki browser is terrible. Finding data is hard and collaboration is practically impossible. 
-The idea is to introduce a text format for Anki cards. 
+The idea is to introduce a text format for Anki notes. 
 This format needs to be minimalistic to well serve as a note.
 Thanks to that one could have the following workflow:
 
-1) Making notes when reading source
-2) Adding tags and automatically generate cards from this note (easy cards creation)
-3) Cards should direct to this note in comment via a link (to give context)
+1) Making text notes when reading source
+2) Adding tags and automatically generate notes from this text (easy notes creation)
+3) notes should direct to this note in comment via a link (to give context)
 
-Next, when we change our notes we want our cards updated as well. To make it possible cards needs to be identified. When we remove card it should be updated as well. 
+Next, when we change our notes we want our notes updated as well. To make it possible notes needs to be identified. When we remove notes it should be updated as well. 
 
 All those capabilities are already implemented.
 
-Ideally, this format should also allow public decks shared and updated socially. For that, cards need a different identifier than their deck id.
+Ideally, this format should also allow public decks shared and updated socially. For that, notes need a different identifier than their deck id.
 
 ## Format
 
@@ -35,7 +35,7 @@ a: Answer 2
 And this {text} number is {2}
 ```
 
-The cards generated from that are the following:
+The notes generated from that are the following:
 
 ```
 Card.Cloze(text = "This is text {{c1::1}}"),
@@ -47,7 +47,7 @@ Card.Cloze(text = "And this {{c1::text}} number is {{c2::2}}")
 Clozes can be both marked using single brace (like `{aaa}`), as well as using double braces with name (like `{{c1::aaa}}`). 
 Though after processing the letter is generated as it should be preferred. 
 
-Also after those cards are added, ids are attached. They are necessery later for updating cards instead of duplicating them:
+Also after those notes are added, ids are attached. They are necessery later for updating notes instead of duplicating them:
 
 ```
 @1576516338844
@@ -71,7 +71,7 @@ To see more examples, chek out unit tests.
 
 ### Note types
 
-Currently there are 4 card types supported:
+Currently there are 4 notes types supported:
 * Plain text
 * Cloze deletion
 * Basic
@@ -80,7 +80,7 @@ Currently there are 4 card types supported:
 Types that should be introduced:
 * List
 * Set
-* General - univerasal type that can cover any card type
+* General - univerasal type that can cover any notes type
 
 ### Anki Connect
 
@@ -90,12 +90,12 @@ Program uses [Anki Connect](https://github.com/FooSoft/anki-connect). Install it
 
 It is a Kotlin Gradle project. Import it in IntelliJ and it should be ready to go (supposing that you have Anki Connect installed and Anki started).
 
-Example program presenting existing notes from a deck in `ReadAnki`. Program adding or updating cards based on text in `StoreOrUpdateAnki`. Remamber to change deck names.
+Example program presenting existing notes from a deck in `ReadAnki`. Program adding or updating notes based on text in `StoreOrUpdateAnki`. Remamber to change deck names.
 
 ### Next steps
 
-* New card types
-* Adding missing card type
+* New notes types
+* Adding missing notes type
 * Deck name and header should be encoded in the text header
 * Universal id (to support multiple note maintainers)
 * Support multiline code font

@@ -1,6 +1,6 @@
 import org.junit.Test
-import io.parseCards
-import io.writeCards
+import io.parseNotes
+import io.writeNotes
 import kotlin.test.assertEquals
 
 class ProcessTests {
@@ -25,8 +25,8 @@ class ProcessTests {
         ).map { it.trimIndent() }
 
         for (text in texts) {
-            val cards = parseCards(text)
-            val processed = writeCards(cards)
+            val notes = parseNotes(text)
+            val processed = writeNotes(notes)
             assertEquals(text, processed)
         }
     }

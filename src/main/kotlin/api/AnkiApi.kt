@@ -9,7 +9,7 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.post
 import java.net.ConnectException
 
-interface CardsApi {
+interface RepositoryApi {
     suspend fun connected() : Boolean
     suspend fun addNote(note: NoteDataApi): NoteDataApi
     suspend fun updateNoteFields(note: NoteDataApi): NoteDataApi
@@ -56,7 +56,7 @@ data class OrderedField(
     val order: Int
 )
 
-class AnkiApi : CardsApi {
+class AnkiApi : RepositoryApi {
     private val url = "http://localhost:8765"
     private val client = HttpClient() {
         install(JsonFeature) {

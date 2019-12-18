@@ -1,6 +1,6 @@
 package io
 
-import Card
+import Note
 import java.lang.IllegalArgumentException
 
 val CLOZE_REGEX = "\\{\\{([^:]+::([^}]+))}}".toRegex()
@@ -9,40 +9,40 @@ val STANDALONE_BRACKET_REGEX = "\\{([^}{]+)}".toRegex()
 val BASIC_REGEX = "q: ([\\s\\S]+)\\na: ([\\s\\S]+)".toRegex()
 val BASIC_AND_REVERSED_REGEX = "qa: ([\\s\\S]+)\\naq: ([\\s\\S]+)".toRegex()
 
-fun parseCards(markdown: String): List<Card> {
+fun parseNotes(markdown: String): List<Note> {
     val slitted = markdown.split("\n\n")
     return slitted.asSequence()
         .map { it.trimStart().trimEnd() }
         .map { paragraph ->
             if (paragraph.startsWith("@")) {
                 require(paragraph.contains("\n")) { "Nothing after id in the paragraph $paragraph" }
-                val (idLine, cardText) = paragraph.split("\n", limit = 2)
-                CardTextWithId(idLine.substringAfter("@").toLongOrNull(), cardText)
+                val (idLine, notesText) = paragraph.split("\n", limit = 2)
+                NotesTextWithId(idLine.substringAfter("@").toLongOrNull(), notesText)
             } else {
-                CardTextWithId(null, paragraph)
+                NotesTextWithId(null, paragraph)
             }
         }
-        .map { (id, cardText) ->
+        .map { (id, noteText) ->
             when {
-                BASIC_REGEX in cardText -> {
-                    val (question, answer) = parseQA(cardText, BASIC_REGEX)
-                    Card.Basic(id, question, answer)
+                BASIC_REGEX in noteText -> {
+                    val (question, answer) = parseQA(noteText, BASIC_REGEX)
+                    Note.Basic(id, question, answer)
                 }
-                BASIC_AND_REVERSED_REGEX in cardText -> {
+                BASIC_AND_REVERSED_REGEX in noteText -> {
                     val (question, answer) = parseQA(
-                        cardText,
+                        noteText,
                         BASIC_AND_REVERSED_REGEX
                     )
-                    Card.BasicAndReverse(id, question, answer)
+                    Note.BasicAndReverse(id, question, answer)
                 }
-                CLOZE_REGEX in cardText || STANDALONE_BRACKET_REGEX in cardText -> Card.Cloze(id, cardText.processToCloze())
-                else -> Card.Text(id, cardText)
+                CLOZE_REGEX in noteText || STANDALONE_BRACKET_REGEX in noteText -> Note.Cloze(id, noteText.processToCloze())
+                else -> Note.Text(id, noteText)
             }
         }
         .toList()
 }
 
-private data class CardTextWithId(val id: Long?, val cardText: String)
+private data class NotesTextWithId(val id: Long?, val notesText: String)
 
 private fun String.processToCloze(): String {
     if(CLOZE_REGEX in this) return this

@@ -1,28 +1,28 @@
 package parse
 
-import Card
+import Note
 import parse.NoteDataApi.Companion.NO_ID
 
-fun Card.toApiNote(deckName: String, comment: String): NoteDataApi = when (this) {
-    is Card.Basic -> NoteDataApi(
+fun Note.toApiNote(deckName: String, comment: String): NoteDataApi = when (this) {
+    is Note.Basic -> NoteDataApi(
         noteId = id ?: NO_ID,
         deckName = deckName,
         modelName = "Basic",
         fields = mapOf("Front" to this.front, "Back" to this.back, "Comment" to comment)
     )
-    is Card.BasicAndReverse -> NoteDataApi(
+    is Note.BasicAndReverse -> NoteDataApi(
         noteId = id ?: NO_ID,
         deckName = deckName,
         modelName = "Basic (and reversed card)",
         fields = mapOf("Front" to this.front, "Back" to this.back, "Comment" to comment)
     )
-    is Card.Cloze -> NoteDataApi(
+    is Note.Cloze -> NoteDataApi(
         noteId = id ?: NO_ID,
         deckName = deckName,
         modelName = "Cloze",
         fields = mapOf("Text" to this.text, "Comment" to comment)
     )
-    is Card.Text -> NoteDataApi(
+    is Note.Text -> NoteDataApi(
         noteId = id ?: NO_ID,
         deckName = deckName,
         modelName = "Text",
@@ -31,11 +31,11 @@ fun Card.toApiNote(deckName: String, comment: String): NoteDataApi = when (this)
 }
 
 fun NoteDataApi.toApiNote() = when (modelName) {
-    "Basic" -> Card.Basic(noteId, fields.getValue("Front").removeMultipleBreaks(), fields.getValue("Back").removeMultipleBreaks())
-    "Basic (and reversed card)" -> Card.BasicAndReverse(noteId, fields.getValue("Front").removeMultipleBreaks(), fields.getValue("Back").removeMultipleBreaks())
-    "Cloze" -> Card.Cloze(noteId, fields.getValue("Text").removeMultipleBreaks())
-    "Text" -> Card.Text(noteId, fields.getValue("Text").removeMultipleBreaks())
-    else -> error("Unknown card type $this")
+    "Basic" -> Note.Basic(noteId, fields.getValue("Front").removeMultipleBreaks(), fields.getValue("Back").removeMultipleBreaks())
+    "Basic (and reversed card)" -> Note.BasicAndReverse(noteId, fields.getValue("Front").removeMultipleBreaks(), fields.getValue("Back").removeMultipleBreaks())
+    "Cloze" -> Note.Cloze(noteId, fields.getValue("Text").removeMultipleBreaks())
+    "Text" -> Note.Text(noteId, fields.getValue("Text").removeMultipleBreaks())
+    else -> error("Unknown notes type $this")
 }
 
 fun String.removeMultipleBreaks() = replace("\\n+".toRegex(), "\n")

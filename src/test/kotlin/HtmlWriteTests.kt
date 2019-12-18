@@ -1,24 +1,24 @@
-import io.htmlWriteCards
-import io.writeCards
+import io.htmlWriteNotes
+import io.writeNotes
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class HtmlWriteTests {
 
     @Test
-    fun `No cards produce empty`() {
-        val text = writeCards(listOf())
+    fun `No notes produce empty`() {
+        val text = writeNotes(listOf())
         val expected = ""
         assertEquals(expected, text)
     }
 
     @Test
     fun `Cloze is stored correctly`() {
-        val cards = listOf(
-            Card.Cloze(1, "This is text {{c1::1}}"),
-            Card.Cloze(2, "And this {{c1::text}} number is {{c2::2}}")
+        val notes = listOf(
+            Note.Cloze(1, "This is text {{c1::1}}"),
+            Note.Cloze(2, "And this {{c1::text}} number is {{c2::2}}")
         )
-        val text = htmlWriteCards(cards)
+        val text = htmlWriteNotes(notes)
         val expected = """
 <div>This is text <b>1</b></div>
 <div>And this <b>text</b> number is <b>2</b></div>
@@ -28,13 +28,13 @@ class HtmlWriteTests {
 
     @Test
     fun `Basic and BasisAndReversed are stored correctly`() {
-        val cards = listOf(
-            Card.Basic(1, "AAA", "BBB"),
-            Card.BasicAndReverse(2, "EEE", "FFF"),
-            Card.BasicAndReverse(3, "GGG", "HHH HHH HHH ;,!@#$%^&"),
-            Card.Basic(4, "CCC", "DDD")
+        val notes = listOf(
+            Note.Basic(1, "AAA", "BBB"),
+            Note.BasicAndReverse(2, "EEE", "FFF"),
+            Note.BasicAndReverse(3, "GGG", "HHH HHH HHH ;,!@#$%^&"),
+            Note.Basic(4, "CCC", "DDD")
         )
-        val text = htmlWriteCards(cards)
+        val text = htmlWriteNotes(notes)
         val expected = """
 <div><i>Q:</i> AAA<br><i>A:</i> BBB</div>
 <div><i>Q/A:</i> EEE<br><i>A/Q:</i> FFF</div>
@@ -46,12 +46,12 @@ class HtmlWriteTests {
 
     @Test
     fun `All are stored correctly`() {
-        val cards = listOf(
-            Card.Basic(1, "AAA", "BBB"),
-            Card.Cloze(2, "And this {{c1::text}} number is {{c2::2}}"),
-            Card.BasicAndReverse(3, "GGG", "HHH HHH")
+        val notes = listOf(
+            Note.Basic(1, "AAA", "BBB"),
+            Note.Cloze(2, "And this {{c1::text}} number is {{c2::2}}"),
+            Note.BasicAndReverse(3, "GGG", "HHH HHH")
         )
-        val text = htmlWriteCards(cards)
+        val text = htmlWriteNotes(notes)
         val expected = """
 <div><i>Q:</i> AAA<br><i>A:</i> BBB</div>
 <div>And this <b>text</b> number is <b>2</b></div>

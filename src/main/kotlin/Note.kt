@@ -1,25 +1,25 @@
-sealed class Card {
+sealed class Note {
     abstract val id: Long?
 
     data class Basic(
         override val id: Long? = null,
         val front: String,
         val back: String
-    ) : Card()
+    ) : Note()
 
     data class BasicAndReverse(
         override val id: Long? = null,
         val front: String,
         val back: String
-    ) : Card()
+    ) : Note()
 
     data class Cloze(
         override val id: Long? = null,
         val text: String
-    ) : Card()
+    ) : Note()
 
     data class Text(
         override val id: Long? = null,
         val text: String
-    ) : Card()
+    ) : Note()
 }

@@ -1,39 +1,39 @@
 import org.junit.Test
-import io.parseCards
+import io.parseNotes
 import kotlin.test.assertEquals
 
 class ParseTests {
 
     @Test
-    fun `Text string with no special elements produces Text cards`() {
+    fun `Text string with no special elements produces Text note`() {
         val texts = listOf("@1\nK", "@1\nLorem ipsum", "@1\nA\nB")
         for (wholeText in texts) {
             val text = wholeText.substringAfter("\n")
-            val cards = parseCards(wholeText)
-            assertEquals(listOf(Card.Text(1, text)), cards)
+            val notes = parseNotes(wholeText)
+            assertEquals(listOf(Note.Text(1, text)), notes)
         }
     }
 
     @Test
-    fun `IncorrectFormatException is thrown when only id and not card`() {
-        assertThrows<IllegalArgumentException> { parseCards("@1") }
-        assertThrows<IllegalArgumentException> { parseCards("@1\n") }
+    fun `IncorrectFormatException is thrown when only id and not note`() {
+        assertThrows<IllegalArgumentException> { parseNotes("@1") }
+        assertThrows<IllegalArgumentException> { parseNotes("@1\n") }
     }
 
     @Test
-    fun `Text string with incorrect special syntax elements produces no cards`() {
+    fun `Text string with incorrect special syntax elements produces no notes`() {
         val texts = listOf("@1\nLorem {ipsum", "@1\nLorem }ipsum", "@1\nLorem }{ipsum")
         for (wholeText in texts) {
             val text = wholeText.substringAfter("\n")
-            val cards = parseCards(wholeText)
-            assertEquals(listOf(Card.Text(1, text)), cards)
+            val notes = parseNotes(wholeText)
+            assertEquals(listOf(Note.Text(1, text)), notes)
         }
     }
 
     @Test
-    fun `Text string with cloze produces a cloze card`() {
-        val cards = parseCards("Lorem {{c1::ipsum}} est")
-        assertEquals(listOf(Card.Cloze(text = "Lorem {{c1::ipsum}} est")), cards)
+    fun `Text string with cloze produces a cloze note`() {
+        val notes = parseNotes("Lorem {{c1::ipsum}} est")
+        assertEquals(listOf(Note.Cloze(text = "Lorem {{c1::ipsum}} est")), notes)
     }
 
     @Test
@@ -43,12 +43,12 @@ class ParseTests {
 
             And this {{c1::text}} number is {{c2::2}}
         """.trimIndent()
-        val cards = parseCards(text)
+        val notes = parseNotes(text)
         assertEquals(
             listOf(
-                Card.Cloze(text = "This is text {{c1::1}}"),
-                Card.Cloze(text = "And this {{c1::text}} number is {{c2::2}}")
-            ), cards
+                Note.Cloze(text = "This is text {{c1::1}}"),
+                Note.Cloze(text = "And this {{c1::text}} number is {{c2::2}}")
+            ), notes
         )
     }
 
@@ -58,8 +58,8 @@ class ParseTests {
             q: My question
             a: My answer
         """.trimIndent()
-        val cards = parseCards(text)
-        assertEquals(listOf(Card.Basic(front = "My question", back = "My answer")), cards)
+        val notes = parseNotes(text)
+        assertEquals(listOf(Note.Basic(front = "My question", back = "My answer")), notes)
     }
 
     @Test
@@ -70,8 +70,8 @@ class ParseTests {
             a: My answer
             line 2
         """.trimIndent()
-        val cards = parseCards(text)
-        assertEquals(listOf(Card.Basic(front = "My question\nLine 2", back = "My answer\nline 2")), cards)
+        val notes = parseNotes(text)
+        assertEquals(listOf(Note.Basic(front = "My question\nLine 2", back = "My answer\nline 2")), notes)
     }
 
     @Test
@@ -80,8 +80,8 @@ class ParseTests {
             qa: My question
             aq: My answer
         """.trimIndent()
-        val cards = parseCards(text)
-        assertEquals(listOf(Card.BasicAndReverse(front = "My question", back = "My answer")), cards)
+        val notes = parseNotes(text)
+        assertEquals(listOf(Note.BasicAndReverse(front = "My question", back = "My answer")), notes)
     }
 
     @Test
@@ -97,13 +97,13 @@ class ParseTests {
 
             And this {{c1::text}} number is {{c2::2}}
         """.trimIndent()
-        val cards = parseCards(text)
+        val notes = parseNotes(text)
         val expected = listOf(
-            Card.Cloze(text = "This is text {{c1::1}}"),
-            Card.BasicAndReverse(front = "My question", back = "My answer"),
-            Card.Basic(front = "Question 2", back = "Answer 2"),
-            Card.Cloze(text = "And this {{c1::text}} number is {{c2::2}}")
+            Note.Cloze(text = "This is text {{c1::1}}"),
+            Note.BasicAndReverse(front = "My question", back = "My answer"),
+            Note.Basic(front = "Question 2", back = "Answer 2"),
+            Note.Cloze(text = "And this {{c1::text}} number is {{c2::2}}")
         )
-        assertEquals(expected, cards)
+        assertEquals(expected, notes)
     }
 }
