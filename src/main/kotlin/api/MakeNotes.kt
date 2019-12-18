@@ -31,8 +31,8 @@ fun Note.toApiNoteOrText(deckName: String, comment: String): ApiNoteOrText = whe
     is Note.Reminder -> ApiNote(
         noteId = id ?: NO_ID,
         deckName = deckName,
-        modelName = "Text",
-        fields = mapOf("Text" to text, "Comment" to comment)
+        modelName = "Reminder",
+        fields = mapOf("Front" to text, "Comment" to comment)
     )
 }
 
@@ -41,12 +41,14 @@ fun ApiNoteOrText.toNote(): Note = when(this) {
     is ApiNote -> this.toNote()
 }
 
-fun ApiNote.toNote(): Note = when (modelName) {
+fun ApiNote.toNote(): Note = toNoteOrNull() ?: error("Unknown notes type $this")
+
+fun ApiNote.toNoteOrNull(): Note? = when (modelName) {
     "Basic" -> Note.Basic(noteId, fields.getValue("Front").removeMultipleBreaks(), fields.getValue("Back").removeMultipleBreaks())
     "Basic (and reversed card)" -> Note.BasicAndReverse(noteId, fields.getValue("Front").removeMultipleBreaks(), fields.getValue("Back").removeMultipleBreaks())
     "Cloze" -> Note.Cloze(noteId, fields.getValue("Text").removeMultipleBreaks())
-    "Text" -> Note.Reminder(noteId, fields.getValue("Text").removeMultipleBreaks())
-    else -> error("Unknown notes type $this")
+    "Reminder" -> Note.Reminder(noteId, fields.getValue("Front").removeMultipleBreaks())
+    else -> null
 }
 
 fun String.removeMultipleBreaks() = replace("\\n+".toRegex(), "\n")

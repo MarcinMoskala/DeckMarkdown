@@ -6,9 +6,9 @@ import java.lang.IllegalArgumentException
 val CLOZE_REGEX = "\\{\\{([^:]+::([^}]+))}}".toRegex()
 val STANDALONE_BRACKET_REGEX = "\\{([^}{]+)}".toRegex()
 
-val BASIC_REGEX = "q: ([\\s\\S]+)\\na: ([\\s\\S]+)".toRegex()
-val BASIC_AND_REVERSED_REGEX = "qa: ([\\s\\S]+)\\naq: ([\\s\\S]+)".toRegex()
-val REMINDER_REGEX = "[Rr](eminder)?: ([\\s\\S]+)".toRegex()
+val BASIC_REGEX = "[Qq]:([\\s\\S]+)\\n[Aa]:([\\s\\S]+)".toRegex()
+val BASIC_AND_REVERSED_REGEX = "[Qq][Aa]:([\\s\\S]+)\\n[Aa][Qq]:([\\s\\S]+)".toRegex()
+val REMINDER_REGEX = "[Rr](eminder)?:([\\s\\S]+)".toRegex()
 
 fun parseNotes(markdown: String): List<Note> {
     val slitted = markdown.split("\n\n")
