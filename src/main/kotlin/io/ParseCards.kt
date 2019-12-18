@@ -8,6 +8,7 @@ val STANDALONE_BRACKET_REGEX = "\\{([^}{]+)}".toRegex()
 
 val BASIC_REGEX = "q: ([\\s\\S]+)\\na: ([\\s\\S]+)".toRegex()
 val BASIC_AND_REVERSED_REGEX = "qa: ([\\s\\S]+)\\naq: ([\\s\\S]+)".toRegex()
+val REMINDER_REGEX = "[Rr](eminder)?: ([\\s\\S]+)".toRegex()
 
 fun parseNotes(markdown: String): List<Note> {
     val slitted = markdown.split("\n\n")
@@ -35,8 +36,14 @@ fun parseNotes(markdown: String): List<Note> {
                     )
                     Note.BasicAndReverse(id, question, answer)
                 }
-                CLOZE_REGEX in noteText || STANDALONE_BRACKET_REGEX in noteText -> Note.Cloze(id, noteText.processToCloze())
-                else -> Note.Text(id, noteText)
+                REMINDER_REGEX in noteText -> {
+                    Note.Reminder(id, noteText.substringAfter(":").trim())
+                }
+                CLOZE_REGEX in noteText || STANDALONE_BRACKET_REGEX in noteText -> Note.Cloze(
+                    id,
+                    noteText.processToCloze()
+                )
+                else -> Note.Text(noteText)
             }
         }
         .toList()
@@ -45,7 +52,7 @@ fun parseNotes(markdown: String): List<Note> {
 private data class NotesTextWithId(val id: Long?, val notesText: String)
 
 private fun String.processToCloze(): String {
-    if(CLOZE_REGEX in this) return this
+    if (CLOZE_REGEX in this) return this
     var num = 0
     return this.replace(STANDALONE_BRACKET_REGEX) { matchResult: MatchResult ->
         val content = matchResult.groupValues[1]

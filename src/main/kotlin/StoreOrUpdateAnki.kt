@@ -3,9 +3,7 @@ import io.parseNotes
 import io.textWriteNotes
 import io.writeNotes
 import kotlinx.coroutines.coroutineScope
-import parse.AnkiApi
-import parse.NoteDataApi
-import parse.toApiNote
+import parse.*
 import java.io.File
 import java.nio.file.Files
 
@@ -46,31 +44,36 @@ suspend fun storeOrUpdateNote(api: AnkiApi, deckName: String, noteContent: Strin
     val notes = parseNotes(noteContent)
 
     val processedNotes = notes
-        .map { it.toApiNote(deckName, comment) }
-        .let { apiNote -> storeOrUpdateCards(api, deckName, apiNote) }
-        .map { it.toApiNote() }
+        .map { it.toApiNoteOrText(deckName, comment) }
+        .let { apiNoteOrText -> storeOrUpdateCards(api, deckName, apiNoteOrText) }
+        .map(ApiNoteOrText::toNote)
         .let(::writeNotes)
 
     return UpdateResult(notes, processedNotes)
 }
 
-suspend fun storeOrUpdateCards(api: AnkiApi, deckName: String, notes: List<NoteDataApi>): List<NoteDataApi> {
+suspend fun storeOrUpdateCards(api: AnkiApi, deckName: String, apiNote: List<ApiNoteOrText>): List<ApiNoteOrText> {
     val currentCards = api.getNotesInDeck(deckName)
     val currentIds = currentCards.map { it.noteId }
 
-    val removedCardIds = currentIds - notes.map { it.noteId }
+    val removedCardIds = currentIds - apiNote.filterIsInstance<ApiNote>().map { it.noteId }
     api.deleteNotes(removedCardIds)
 
     val removedCount = removedCardIds.size
     var addedCount = 0
     var updatedCount = 0
-    val newCards = notes.map {
-        if (it.hasId && it.noteId in currentIds) {
-            updatedCount++
-            api.updateNoteFields(it)
-        } else {
-            addedCount++
-            api.addNote(it)
+    val newCards = apiNote.map {
+        when(it) {
+            is ApiNote -> {
+                if (it.hasId && it.noteId in currentIds) {
+                    updatedCount++
+                    api.updateNoteFields(it)
+                } else {
+                    addedCount++
+                    api.addNote(it)
+                }
+            }
+            is Text -> it
         }
     }
 

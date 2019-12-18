@@ -14,6 +14,7 @@ fun textWriteNotes(notes: List<Note>): String = notes.joinToString(separator = "
             .replace("{front}", it.front)
             .replace("{back}", it.back)
         is Note.Cloze -> it.text.replace(CLOZE_REGEX) { it.groupValues[2] }
+        is Note.Reminder -> it.text
         is Note.Text -> it.text
     }
 }

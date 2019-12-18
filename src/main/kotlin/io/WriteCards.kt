@@ -15,6 +15,7 @@ fun writeNotes(notes: List<Note>): String = notes.joinToString(separator = "\n\n
             .replace("{front}", it.front)
             .replace("{back}", it.back)
         is Note.Cloze -> it.text
+        is Note.Reminder -> "Reminder: " + it.text
         is Note.Text -> it.text
     }
     return@joinToString "$head$noteText"

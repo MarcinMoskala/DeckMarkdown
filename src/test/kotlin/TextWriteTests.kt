@@ -7,7 +7,7 @@ class TextWriteTests {
 
     @Test
     fun `No notes produce empty`() {
-        val text = writeNotes(listOf())
+        val text = textWriteNotes(listOf())
         val expected = ""
         assertEquals(expected, text)
     }

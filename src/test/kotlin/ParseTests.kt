@@ -6,11 +6,10 @@ class ParseTests {
 
     @Test
     fun `Text string with no special elements produces Text note`() {
-        val texts = listOf("@1\nK", "@1\nLorem ipsum", "@1\nA\nB")
-        for (wholeText in texts) {
-            val text = wholeText.substringAfter("\n")
-            val notes = parseNotes(wholeText)
-            assertEquals(listOf(Note.Text(1, text)), notes)
+        val texts = listOf("K", "Lorem ipsum", "A\nB")
+        for (text in texts) {
+            val notes = parseNotes(text)
+            assertEquals(listOf(Note.Text(text)), notes)
         }
     }
 
@@ -22,11 +21,11 @@ class ParseTests {
 
     @Test
     fun `Text string with incorrect special syntax elements produces no notes`() {
-        val texts = listOf("@1\nLorem {ipsum", "@1\nLorem }ipsum", "@1\nLorem }{ipsum")
+        val texts = listOf("Lorem {ipsum", "Lorem }ipsum", "Lorem }{ipsum")
         for (wholeText in texts) {
             val text = wholeText.substringAfter("\n")
             val notes = parseNotes(wholeText)
-            assertEquals(listOf(Note.Text(1, text)), notes)
+            assertEquals(listOf(Note.Text(text)), notes)
         }
     }
 

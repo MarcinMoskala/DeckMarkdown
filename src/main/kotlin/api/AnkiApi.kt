@@ -11,9 +11,9 @@ import java.net.ConnectException
 
 interface RepositoryApi {
     suspend fun connected() : Boolean
-    suspend fun addNote(note: NoteDataApi): NoteDataApi
-    suspend fun updateNoteFields(note: NoteDataApi): NoteDataApi
-    suspend fun getNotesInDeck(deckName: String): List<NoteDataApi>
+    suspend fun addNote(apiNote: ApiNote): ApiNote
+    suspend fun updateNoteFields(apiNote: ApiNote): ApiNote
+    suspend fun getNotesInDeck(deckName: String): List<ApiNote>
     suspend fun createDeck(name: String)
     suspend fun removeDeck(name: String)
     suspend fun deleteNotes(ids: List<Long>)
@@ -22,13 +22,15 @@ interface RepositoryApi {
 
 data class ResultWrapper<T>(val result: T? = null, val error: String? = null)
 
-data class NoteDataApi(
+sealed class ApiNoteOrText()
+data class Text(val text: String): ApiNoteOrText()
+data class ApiNote(
     val noteId: Long = NO_ID, // For creation, API do not care
     val deckName: String,
     val modelName: String,
     val fields: Map<String, String>,
     val tags: List<String> = emptyList()
-) {
+): ApiNoteOrText() {
     val hasId get() = noteId != NO_ID
 
     companion object {
@@ -42,7 +44,7 @@ data class NoteReceiveDataApi(
     val fields: Map<String, OrderedField>,
     val tags: List<String> = emptyList()
 ) {
-    fun toNoteData(deckName: String): NoteDataApi = NoteDataApi(
+    fun toNoteData(deckName: String): ApiNote = ApiNote(
         noteId = noteId,
         deckName = deckName,
         modelName = modelName,
@@ -71,7 +73,7 @@ class AnkiApi : RepositoryApi {
         false
     }
 
-    override suspend fun getNotesInDeck(deckName: String): List<NoteDataApi> {
+    override suspend fun getNotesInDeck(deckName: String): List<ApiNote> {
         val text = client.post<String>(url) {
             body = "{\"action\": \"findNotes\", \"version\": 6, \"params\": {\"query\": \"deck:$deckName\"}}"
         }
@@ -88,26 +90,26 @@ class AnkiApi : RepositoryApi {
             ?: throw Error(res2.error)
     }
 
-    override suspend fun addNote(note: NoteDataApi): NoteDataApi {
-        val noteStr = note.toJson()
+    override suspend fun addNote(apiNote: ApiNote): ApiNote {
+        val noteStr = apiNote.toJson()
         val text = client.post<String>(url) {
             val bodyText = "{\"action\": \"addNote\", \"version\": 6, \"params\": {\"note\": $noteStr}}"
             body = bodyText
         }
         val res = text.readObject<ResultWrapper<Long>>()
         val id = res.result ?: throw Error(res.error)
-        return note.copy(noteId = id)
+        return apiNote.copy(noteId = id)
     }
 
-    override suspend fun updateNoteFields(note: NoteDataApi): NoteDataApi {
-        val fieldsStr = note.fields.toJson()
+    override suspend fun updateNoteFields(apiNote: ApiNote): ApiNote {
+        val fieldsStr = apiNote.fields.toJson()
         val text = client.post<String>(url) {
-            val bodyText = "{\"action\": \"updateNoteFields\", \"version\": 6, \"params\": { \"note\": { \"id\": ${note.noteId}, \"fields\": $fieldsStr}}}"
+            val bodyText = "{\"action\": \"updateNoteFields\", \"version\": 6, \"params\": { \"note\": { \"id\": ${apiNote.noteId}, \"fields\": $fieldsStr}}}"
             body = bodyText
         }
         val res = text.readObjectOrNull<ResultWrapper<Any?>>()
         if (res?.error != null) throw Error(res.error)
-        return note
+        return apiNote
     }
 
     override suspend fun createDeck(name: String) {
