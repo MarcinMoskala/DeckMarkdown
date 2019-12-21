@@ -19,7 +19,7 @@ suspend fun main() = coroutineScope<Unit> {
     check(notesFile.exists())
     check(notesFile.isDirectory)
 
-    val htmlNotesFile = File("notesHtml")
+//    val htmlNotesFile = File("notesHtml")
 
     val files = notesFile.listFiles()!!
     for (file in files) {
@@ -28,10 +28,10 @@ suspend fun main() = coroutineScope<Unit> {
         val (notes, processedText) = storeOrUpdateNote(api = api, deckName = name, noteContent = body, comment = "")
         file.writeText(processedText)
 
-        if(htmlNotesFile.exists() && htmlNotesFile.isDirectory) {
-            writeHtml(htmlNotesFile, name, notes)
-            writeFormattedText(htmlNotesFile, name, notes)
-        }
+//        if(htmlNotesFile.exists() && htmlNotesFile.isDirectory) {
+//            writeHtml(htmlNotesFile, name, notes)
+//            writeFormattedText(htmlNotesFile, name, notes)
+//        }
     }
 
     print("Done")

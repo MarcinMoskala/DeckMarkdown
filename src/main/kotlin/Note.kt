@@ -23,6 +23,14 @@ sealed class Note {
         val text: String
     ) : Note()
 
+    data class ListDeletion(
+        override val id: Long? = null,
+        val title: String,
+        val items: List<Item>
+    ) : Note() {
+        data class Item(val value: String, val comment: String = "")
+    }
+
     data class Text(
         val text: String
     ) : Note() {

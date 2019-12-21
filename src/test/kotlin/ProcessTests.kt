@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 class ProcessTests {
 
     @Test
-    fun `Text stays the same after reading and writing`() {
+    fun `Basically formatted text stays the same after reading and writing`() {
         val texts = listOf(
             """
                 Lorem {{c1::ipsum}} est
@@ -21,6 +21,13 @@ class ProcessTests {
                 a: Answer 2
             
                 And this {{c1::text}} number is {{c2::2}}
+                
+                @10
+                L: AAA
+                * A
+                * B
+                Comment
+                * C
             """
         ).map { it.trimIndent() }
 

@@ -1,3 +1,4 @@
+import Note.ListDeletion.Item
 import io.writeNotes
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -53,6 +54,23 @@ aq: HHH HHH HHH ;,!@#${'$'}%^&
 @4
 q: CCC
 a: DDD
+        """.trimIndent()
+        assertEquals(expected, text)
+    }
+
+    @Test
+    fun `List is written correctly`() {
+        val notes = listOf(
+            Note.ListDeletion(1, "AAA", listOf(Item("A"), Item("B", "Comment"), Item("C")))
+        )
+        val text = writeNotes(notes)
+        val expected = """
+@1
+L: AAA
+* A
+* B
+Comment
+* C
         """.trimIndent()
         assertEquals(expected, text)
     }

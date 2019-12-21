@@ -1,7 +1,6 @@
 package io
 
 import Note
-import java.lang.IllegalArgumentException
 
 val CLOZE_REGEX = "\\{\\{([^:]+::([^}]+))}}".toRegex()
 val STANDALONE_BRACKET_REGEX = "\\{([^}{]+)}".toRegex()
@@ -9,6 +8,9 @@ val STANDALONE_BRACKET_REGEX = "\\{([^}{]+)}".toRegex()
 val BASIC_REGEX = "[Qq]:([\\s\\S]+)\\n[Aa]:([\\s\\S]+)".toRegex()
 val BASIC_AND_REVERSED_REGEX = "[Qq][Aa]:([\\s\\S]+)\\n[Aa][Qq]:([\\s\\S]+)".toRegex()
 val REMINDER_REGEX = "[Rr](eminder)?:([\\s\\S]+)".toRegex()
+
+val LIST_QUESTION_REGEX = "[Ll]:([^*]+)\\*".toRegex()
+val LIST_ITEM_REGEX = "\\*\\s*([^\\n]*)(\\n([^*]*))?".toRegex()
 
 fun parseNotes(markdown: String): List<Note> {
     val slitted = markdown.split("\n\n")
@@ -38,6 +40,18 @@ fun parseNotes(markdown: String): List<Note> {
                 }
                 REMINDER_REGEX in noteText -> {
                     Note.Reminder(id, noteText.substringAfter(":").trim())
+                }
+                LIST_QUESTION_REGEX in noteText -> {
+                    val question = checkNotNull(LIST_QUESTION_REGEX.find(noteText))
+                        .groupValues[1].trim().trimEnd()
+                    val items = LIST_ITEM_REGEX.findAll(noteText)
+                        .map {
+                            val value = it.groupValues[1].trim().trimEnd()
+                            val comment = it.groupValues[3].trim().trimEnd()
+                            Note.ListDeletion.Item(value, comment)
+                        }
+                        .toList()
+                    Note.ListDeletion(id, question, items)
                 }
                 CLOZE_REGEX in noteText || STANDALONE_BRACKET_REGEX in noteText -> Note.Cloze(
                     id,

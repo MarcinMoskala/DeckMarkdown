@@ -16,5 +16,6 @@ fun textWriteNotes(notes: List<Note>): String = notes.joinToString(separator = "
         is Note.Cloze -> it.text.replace(CLOZE_REGEX) { it.groupValues[2] }
         is Note.Reminder -> it.text
         is Note.Text -> it.text
+        is Note.ListDeletion -> TODO()
     }
 }

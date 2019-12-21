@@ -16,6 +16,7 @@ fun htmlWriteNotes(notes: List<Note>): String = notes.joinToString(separator = "
         is Note.Cloze -> it.text.replace(CLOZE_REGEX) { "<b>${it.groupValues[2]}</b>" }
         is Note.Reminder -> it.text
         is Note.Text -> it.text
+        is Note.ListDeletion -> TODO()
     }
     return@joinToString "<div>$notesText</div>"
 }

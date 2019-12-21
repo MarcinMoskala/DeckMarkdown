@@ -1,9 +1,11 @@
+import Note.ListDeletion.Item
 import kotlinx.coroutines.runBlocking
 import org.junit.Assume.assumeTrue
 import org.junit.Before
 import org.junit.Test
 import parse.AnkiApi
 import parse.toApiNote
+import parse.toNote
 import kotlin.random.Random
 import kotlin.test.assertEquals
 
@@ -64,4 +66,29 @@ class AnkiApiTests {
         val deckName = "MyNameKOKOKOKOKO" + Random.nextInt()
         assertThrows<Error> { api.addNote(Note.Cloze(1, "AAA").toApiNote(deckName, "")) }
     }
+
+//    @Test
+//    fun `Elements stays the same after read and write`() = runBlocking {
+//
+//        val listDeletionNote = Note.ListDeletion(
+//            title = "AAA",
+//            items = listOf(Item("a"), Item("b", "comment"))
+//        )
+//
+//        val deckName = "MyName"
+//        val notes = listOf(listDeletionNote)
+//        val apiNotes = notes.map { it.toApiNote(deckName, "") }
+//        try {
+//            api.createDeck(deckName)
+//            assertDeckAdded(deckName)
+//
+//            val addedNoted = apiNotes.map { api.addNote(it) }
+//            val notesInDeck = api.getNotesInDeck(deckName)
+//            val actual = notesInDeck.map { it.toNote() }
+//            assertEquals(notes, actual) // Problem with id
+//        } finally {
+//            api.removeDeck(deckName)
+//        }
+//        assertDeckRemoved(deckName)
+//    }
 }
