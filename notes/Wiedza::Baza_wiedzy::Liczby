@@ -1,0 +1,105 @@
+Funkcjonują 2 skale: krótka i długa. W obydwu używa się przedrostków mających korzenie w kolejnych liczbach łacińskich:
+Milion, Bilion, Trylion, Kwadrylion, ... W krótkiej skali (język angielski) każdy kolejny ma o 3 zera więcej.
+W długiej skali (stosowanej w polsce) po nich następuje odpowiednik z końcówką -ard. Tak więc po Milion jest Miliard, a bo Bilion Biliard.
+Prosta heurystyka: Krótka skala (angielski) = (przedrostek + 1) * 3 zera. Długa skala (polska) = przedrostek * 6 zer.
+Więcej tutaj: https://en.wikipedia.org/wiki/Long_and_short_scales
+
+@1576969351689
+qa: Milion (eng. Million)
+aq: 10^6 = 1 000 000
+
+@1576969351755
+qa: Miliard (eng. Billion)
+aq: 10^9 = 1 000 000 000
+
+@1576969351789
+qa: Bilion (eng. Trillion)
+aq: 10^12 = 1 000 000 000 000
+
+@1576969351839
+qa: Biliard (eng. Billiard)
+aq: 10^15 = 1 000 000 000 000 000
+
+@1576969351889
+qa: Trylion (eng. Quintillion)
+aq: 10^18 = 1 000 000 000 000 000 000
+
+@1576969351914
+qa: Tryliard (eng. Quintillion)
+aq: 10^21 = 1 000 000 000 000 000 000 000
+
+@1576969351969
+qa: Kwadrylion (eng. Sextillion)
+aq: 10^24 = 1 000 000 000 000 000 000 000 000
+
+@1576969352014
+qa: Kwadryliard (eng. Septillion)
+aq: 10^27 = 1 000 000 000 000 000 000 000 000 000
+
+@1576969352064
+qa: Googol
+aq: 10^100
+
+@1576969352114
+qa: Googolplex
+aq: 10^10^100
+
+Przedrostek SI – prefiks wyrażający wielokrotności i podwielokrotności jednostek miar opartych o system metryczny.
+Przedrostki zostały wdrożone w ramach układu SI, choć okazjonalnie stosuje się je także do jednostek spoza tego systemu (np. mililitr czy milisekunda kątowa).
+https://pl.wikipedia.org/wiki/Przedrostek_SI
+
+@1576969352139
+qa: Deka (da)
+aq: 10^1 przedrostek SI (metric prefix)
+
+@1576969352163
+qa: Hekto (h)
+aq: 10^2 przedrostek SI (metric prefix)
+
+@1576969352207
+qa: Kilo (k)
+aq: 10^3 przedrostek SI (metric prefix)
+
+@1576969352239
+qa: Mega (M)
+aq: 10^6 przedrostek SI (metric prefix)
+
+@1576969352289
+qa: Giga (G)
+aq: 10^9 przedrostek SI (metric prefix)
+
+@1576969352313
+qa: Tera (T)
+aq: 10^12 przedrostek SI (metric prefix)
+
+@1576969352363
+qa: Peta (P)
+aq: 10^15 przedrostek SI (metric prefix)
+
+@1576969352388
+qa: Eksa (E)
+aq: 10^18 przedrostek SI (metric prefix)
+
+@1576969352413
+qa: Decy (d)
+aq: 10^-1 przedrostek SI (metric prefix)
+
+@1576969352439
+qa: Centy (c)
+aq: 10^-2 przedrostek SI (metric prefix)
+
+@1576969352492
+qa: Mili (m)
+aq: 10^-3 przedrostek SI (metric prefix)
+
+@1576969352538
+qa: Mikro (µ)
+aq: 10^-6 przedrostek SI (metric prefix)
+
+@1576969352589
+qa: Nano (n)
+aq: 10^-9 przedrostek SI (metric prefix)
+
+@1576969352639
+qa: Piko (p)
+aq: 10^-12 przedrostek SI (metric prefix)
