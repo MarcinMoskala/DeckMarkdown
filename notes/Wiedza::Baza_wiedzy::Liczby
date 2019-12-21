@@ -1,3 +1,5 @@
+<a href="https://github.com/MarcinMoskala/AnkiMarkdown/blob/master/notes/Wiedza::Baza_wiedzy::Liczby">Link</a>
+
 Funkcjonują 2 skale: krótka i długa. W obydwu używa się przedrostków mających korzenie w kolejnych liczbach łacińskich:
 Milion, Bilion, Trylion, Kwadrylion, ... W krótkiej skali (język angielski) każdy kolejny ma o 3 zera więcej.
 W długiej skali (stosowanej w polsce) po nich następuje odpowiednik z końcówką -ard. Tak więc po Milion jest Miliard, a bo Bilion Biliard.
@@ -17,7 +19,7 @@ qa: Bilion (eng. Trillion)
 aq: 10^12 = 1 000 000 000 000
 
 @1576969351839
-qa: Biliard (eng. Billiard)
+qa: Biliard (eng. Quadrillion)
 aq: 10^15 = 1 000 000 000 000 000
 
 @1576969351889

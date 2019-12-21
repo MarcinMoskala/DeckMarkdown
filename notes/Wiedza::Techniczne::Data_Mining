@@ -1,3 +1,5 @@
+<a href="https://github.com/MarcinMoskala/AnkiMarkdown/blob/master/notes/Wiedza::Techniczne::Data_Mining">Link</a>
+
 @1576577482011
 For {{c2::classification}} problems, it is natural to measure a classifier’s performance in terms of the {{c1::error rate}}. The {{c2::classifier}} predicts the class of each instance: if it is correct, that is counted as a success; if not, it is an error. The {{c1::error rate}} is just the {{c3::proportion of errors made over a whole set of instances}}, and it measures the overall performance of the classifier.
 

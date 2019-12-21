@@ -25,7 +25,8 @@ suspend fun main() = coroutineScope<Unit> {
     for (file in files) {
         val name = file.name
         val body = file.readText()
-        val (notes, processedText) = storeOrUpdateNote(api = api, deckName = name, noteContent = body, comment = "")
+        val comment = body.substringBefore("\n")
+        val (notes, processedText) = storeOrUpdateNote(api = api, deckName = name, noteContent = body, comment = comment)
         file.writeText(processedText)
 
 //        if(htmlNotesFile.exists() && htmlNotesFile.isDirectory) {
