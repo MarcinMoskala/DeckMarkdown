@@ -105,5 +105,12 @@ qa: Confusion matrix
 aq: Matrix in which element shows the number of test examples for which the actual class is the row and the predicted class is the column.
 
 @1576612876750
-q: What does Kappa statistic measuer?
+q: What does Kappa statistic measure?
 a: The agreement between two confusion matrixes
+
+@1576796961100
+q: ROC stands for
+a: Receiver Operating Characteristic.
+
+@1576796961167
+{{c1::ROC (Receiver Operating Characteristic)}} plot the number of {{c2::positives included in the sample}} on the vertical axis, expressed as a {{c3::percentage of the total number of positives}}, against the {{c4::number of negatives included in the sample}}, expressed as a {{c5::percentage of the total number of negatives, on the horizontal axis}}.
