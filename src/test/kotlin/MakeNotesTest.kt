@@ -11,10 +11,11 @@ class MakeNotesTest {
     fun `Example ListDeletion is correctly transformed`() {
         val id = 123L
         val deckName = "DeckName"
-        val comment = "General Comment"
+        val comment = "Comment"
         val actual = Note.ListDeletion(
             id = id,
             title = "AAA",
+            generalComment = "General Comment",
             items = listOf(Item("a"), Item("b", "comment"))
         )
             .toApiNoteOrText(deckName, comment)
@@ -24,7 +25,8 @@ class MakeNotesTest {
             modelName = "ListDeletion",
             fields = mapOf(
                 "Title" to "AAA",
-                "General Comment" to comment,
+                "General Comment" to "General Comment",
+                "Comment" to comment,
                 "1" to "a",
                 "1 comment" to "",
                 "2" to "b",

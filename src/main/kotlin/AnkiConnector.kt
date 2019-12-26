@@ -3,40 +3,48 @@ import io.writeNotes
 import parse.*
 import java.io.File
 
-class AnkiMarkup(
+class AnkiConnector(
     private val api: RepositoryApi = AnkiApi()
 ) {
     suspend fun syncFolder(folderName: String) {
         val notesFile = File(folderName)
-        check(notesFile.exists())
-        check(notesFile.isDirectory)
+        require(notesFile.exists())
+        require(notesFile.isDirectory)
+
+        syncMedia("$folderName/media")
 
 //    val htmlNotesFile = File("notesHtml")
 
-        val files = notesFile.listFiles()!!
-        for (file in files) {
+        notesFile.listFiles()!!.filterNot { it.isDirectory }.forEach { file ->
             val name = file.name
-            val body = file.readText()
+            val body = file.readText().dropMediaFolderPrefix()
             val comment = body.substringBefore("\n")
-            val notes = storeOrUpdateNote(deckName = name, noteContent = body, comment = comment)
+            val notes = storeOrUpdateNoteText(deckName = name, noteContent = body, comment = comment)
             val text = writeNotes(notes)
-            file.writeText(text)
+            file.writeText(text.addMediaFolderPrefix())
 
 //        if(htmlNotesFile.exists() && htmlNotesFile.isDirectory) {
 //            writeHtml(htmlNotesFile, name, notes)
 //            writeFormattedText(htmlNotesFile, name, notes)
 //        }
         }
+    }
 
-        print("Done")
+    private suspend fun syncMedia(folderName: String) {
+        val notesFile = File(folderName)
+        if (!notesFile.exists() || !notesFile.isDirectory) return
+
+        notesFile.listFiles()!!.forEach { file ->
+            api.storeMediaFile(file)
+        }
     }
 
     suspend fun readNotesFromDeck(deckName: String): List<Note> =
         api.getNotesInDeck(deckName)
             .map { it.toNote() }
 
-    suspend fun storeOrUpdateNote(deckName: String, noteContent: String, comment: String): List<Note> {
-        if(!api.connected()) {
+    suspend fun storeOrUpdateNoteText(deckName: String, noteContent: String, comment: String): List<Note> {
+        if (!api.connected()) {
             error("This function requires opened Anki with installed Anki Connect plugin. Details in ReadMe.md")
         }
 
@@ -52,7 +60,7 @@ class AnkiMarkup(
         deckName: String,
         apiNote: List<ApiNoteOrText>
     ): List<ApiNoteOrText> {
-        if(!api.connected()) {
+        if (!api.connected()) {
             error("This function requires opened Anki with installed Anki Connect plugin. Details in ReadMe.md")
         }
 
@@ -83,4 +91,13 @@ class AnkiMarkup(
         println("In deck $deckName added $addedCount, updated $updatedCount, removed $removedCount")
         return newCards
     }
+}
+
+/**
+ * This is done because all media files needs to be located in "media", but later in Anki
+ * they are all by default in the folder containing all media
+ */
+private fun String.dropMediaFolderPrefix(): String = this.replace("\"media/", "\"")
+private fun String.addMediaFolderPrefix(): String = this.replace("<img src=\"([\\w.]*)\"".toRegex()) {
+    "<img src=\"media/${it.groupValues[1]}\""
 }

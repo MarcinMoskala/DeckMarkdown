@@ -1,9 +1,8 @@
 import io.writeNotes
 import kotlinx.coroutines.coroutineScope
-import parse.AnkiApi
 
 suspend fun main() = coroutineScope<Unit> {
-    val ankiMarkup = AnkiMarkup()
+    val ankiMarkup = AnkiConnector()
     val deckName = "Wiedza::Techniczne::Test"
     val comment = ""
     val noteContent = """
@@ -29,7 +28,7 @@ a: Yes, there is nothing wrong with this: it is just a way of maximizing the amo
 q: Once the validation data has been used, can it be bundled back into the training data?
 a: Yes. To retrain that learning scheme, maximizing the use of data.
     """.trimMargin()
-    ankiMarkup.storeOrUpdateNote(deckName, noteContent, comment)
+    ankiMarkup.storeOrUpdateNoteText(deckName, noteContent, comment)
         .let(::writeNotes)
         .let(::print)
 }

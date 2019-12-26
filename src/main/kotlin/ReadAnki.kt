@@ -2,8 +2,8 @@ import io.writeNotes
 import kotlinx.coroutines.coroutineScope
 
 suspend fun main() = coroutineScope<Unit> {
-    with(AnkiMarkup()) {
-        readNotesFromDeck(deckName = "Wiedza::Baza_wiedzy::Zasady")
+    with(AnkiConnector()) {
+        readNotesFromDeck(deckName = "Wiedza::Biologia::Ciało_instrukcja")
             .let(::writeNotes)
             .let(::print)
     }

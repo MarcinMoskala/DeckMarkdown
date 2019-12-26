@@ -61,7 +61,7 @@ a: DDD
     @Test
     fun `List is written correctly`() {
         val notes = listOf(
-            Note.ListDeletion(1, "AAA", listOf(Item("A"), Item("B", "Comment"), Item("C")))
+            Note.ListDeletion(1, title = "AAA", items = listOf(Item("A"), Item("B", "Comment"), Item("C")))
         )
         val text = writeNotes(notes)
         val expected = """

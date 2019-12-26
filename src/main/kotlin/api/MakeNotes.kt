@@ -16,35 +16,35 @@ fun Note.toApiNoteOrText(deckName: String, comment: String): ApiNoteOrText = whe
         noteId = id ?: NO_ID,
         deckName = deckName,
         modelName = "Basic",
-        fields = mapOf("Front" to this.front, "Back" to this.back, "Comment" to comment)
+        fields = mapOf("Front" to this.front, "Back" to this.back, "Extra" to comment)
     )
     is Note.BasicAndReverse -> ApiNote(
         noteId = id ?: NO_ID,
         deckName = deckName,
         modelName = "Basic (and reversed card)",
-        fields = mapOf("Front" to this.front, "Back" to this.back, "Comment" to comment)
+        fields = mapOf("Front" to this.front, "Back" to this.back, "Extra" to comment)
     )
     is Note.Cloze -> ApiNote(
         noteId = id ?: NO_ID,
         deckName = deckName,
         modelName = "Cloze",
-        fields = mapOf("Text" to this.text, "Comment" to comment)
+        fields = mapOf("Text" to this.text, "Extra" to comment)
     )
     is Note.Reminder -> ApiNote(
         noteId = id ?: NO_ID,
         deckName = deckName,
         modelName = "Reminder",
-        fields = mapOf("Front" to text, "Comment" to comment)
+        fields = mapOf("Front" to text, "Extra" to comment)
     )
     is Note.ListDeletion -> ApiNote(
         noteId = id ?: NO_ID,
         deckName = deckName,
-        modelName = if(type == ListType.List) "ListDeletion" else "SetDeletion",
-        fields = mapOf("Title" to title, "General Comment" to comment) +
+        modelName = if (type == ListType.List) "ListDeletion" else "SetDeletion",
+        fields = mapOf("Title" to title, "General Comment" to generalComment, "Extra" to comment) +
                 items.withIndex()
                     .flatMap { (index, item) ->
                         val positionStr = "${index + 1}"
-                        listOfNotNull(positionStr to item.value, "${positionStr} comment" to item.comment)
+                        listOfNotNull(positionStr to item.value, "$positionStr comment" to item.comment)
                     }
                     .toMap()
     )
@@ -70,8 +70,20 @@ fun ApiNote.toNoteOrNull(): Note? = when (modelName) {
     )
     "Cloze" -> Note.Cloze(noteId, fields.getValue("Text").removeMultipleBreaks())
     "Reminder" -> Note.Reminder(noteId, fields.getValue("Front").removeMultipleBreaks())
-    "ListDeletion" -> Note.ListDeletion(noteId, ListType.List, fields.getValue("Title").removeMultipleBreaks(), makeItemsList())
-    "SetDeletion" -> Note.ListDeletion(noteId, ListType.Set, fields.getValue("Title").removeMultipleBreaks(), makeItemsList())
+    "ListDeletion" -> Note.ListDeletion(
+        noteId,
+        ListType.List,
+        fields.getValue("Title").removeMultipleBreaks(),
+        makeItemsList(),
+        fields.getValue("General Comment")
+    )
+    "SetDeletion" -> Note.ListDeletion(
+        noteId,
+        ListType.Set,
+        fields.getValue("Title").removeMultipleBreaks(),
+        makeItemsList(),
+        fields.getValue("General Comment")
+    )
     else -> null
 }
 

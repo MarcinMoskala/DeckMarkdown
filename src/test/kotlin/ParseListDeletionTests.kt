@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 class ParseListDeletionTests {
 
     @Test
-    fun `Simple and multiline List is parsed correctly`() {
+    fun `Simple List is parsed correctly, second line is treated as a geretal comment`() {
         val text = """
 L: First 3 letters
 * a
@@ -22,7 +22,8 @@ In the English alphabet
         val expected = listOf<Note>(
             Note.ListDeletion(title = "First 3 letters", items = listOf(Item("a"), Item("b"), Item("c"))),
             Note.ListDeletion(
-                title = "First 3 letters\nIn the English alphabet",
+                title = "First 3 letters",
+                generalComment = "In the English alphabet",
                 items = listOf(Item("a"), Item("b"), Item("c"))
             )
         )
@@ -41,24 +42,11 @@ and more
 bbbbb
 * c
 ccccc
-
-L: First 3 letters
-In the English alphabet
-* a
-aaaaa
-* b
-bbbbb
-* c
-ccccc
         """.trimIndent()
         val expected = listOf<Note>(
             Note.ListDeletion(
                 title = "First 3 letters",
                 items = listOf(Item("a", "aaaaa\nnext\nand more"), Item("b", "bbbbb"), Item("c", "ccccc"))
-            ),
-            Note.ListDeletion(
-                title = "First 3 letters\nIn the English alphabet",
-                items = listOf(Item("a", "aaaaa"), Item("b", "bbbbb"), Item("c", "ccccc"))
             )
         )
         assertEquals(expected, parseNotes(text))
