@@ -2,6 +2,7 @@ package parse
 
 import Note
 import Note.ListDeletion.Item
+import Note.ListDeletion.ListType
 import parse.ApiNote.Companion.NO_ID
 import java.lang.IllegalArgumentException
 
@@ -38,7 +39,7 @@ fun Note.toApiNoteOrText(deckName: String, comment: String): ApiNoteOrText = whe
     is Note.ListDeletion -> ApiNote(
         noteId = id ?: NO_ID,
         deckName = deckName,
-        modelName = "ListDeletion",
+        modelName = if(type == ListType.List) "ListDeletion" else "SetDeletion",
         fields = mapOf("Title" to title, "General Comment" to comment) +
                 items.withIndex()
                     .flatMap { (index, item) ->
@@ -69,7 +70,8 @@ fun ApiNote.toNoteOrNull(): Note? = when (modelName) {
     )
     "Cloze" -> Note.Cloze(noteId, fields.getValue("Text").removeMultipleBreaks())
     "Reminder" -> Note.Reminder(noteId, fields.getValue("Front").removeMultipleBreaks())
-    "ListDeletion" -> Note.ListDeletion(noteId, fields.getValue("Title").removeMultipleBreaks(), makeItemsList())
+    "ListDeletion" -> Note.ListDeletion(noteId, ListType.List, fields.getValue("Title").removeMultipleBreaks(), makeItemsList())
+    "SetDeletion" -> Note.ListDeletion(noteId, ListType.Set, fields.getValue("Title").removeMultipleBreaks(), makeItemsList())
     else -> null
 }
 

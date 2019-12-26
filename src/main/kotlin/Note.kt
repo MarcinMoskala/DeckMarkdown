@@ -25,10 +25,15 @@ sealed class Note {
 
     data class ListDeletion(
         override val id: Long? = null,
+        val type: ListType,
         val title: String,
         val items: List<Item>
     ) : Note() {
         data class Item(val value: String, val comment: String = "")
+
+        enum class ListType {
+            List, Set
+        }
     }
 
     data class Text(

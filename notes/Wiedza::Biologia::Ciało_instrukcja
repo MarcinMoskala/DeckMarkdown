@@ -1,16 +1,20 @@
 <a href="https://github.com/MarcinMoskala/AnkiMarkdown/blob/master/notes/Wiedza::Biologia::Cia%C5%82o_instrukcja">Link</a>
 
+Na podstawie książki Ciało instrukcja obsługi użytkownika Bill Bryson
+
+# Wstęp: Jak zbudować człowieka
+
 @1576535179133
 q: Ile razy dziennie średnio się mruga?
 a: 14 000
 
 @1576535179182
 q: Ile atomów nas średnio tworzy?
-a: 7 miliardów miliardów miliardów (7 oktylionów)
+a: 7 * 10^48
 
 @1576535179234
 q: Jaka cząsteczka stanowi największy % masy naszego ciała?
-a: Tlen, bo większość naszego ciała to woda (H2O) a Tlen jest znacznie cięższy od Wodoru. (Tlen waży ~16u, a Wodór ~1u)
+a: Tlen (61% przestrzeni), bo większość naszego ciała to woda (H2O) a Tlen jest znacznie cięższy od Wodoru. (Tlen waży ~16u, a Wodór ~1u)
 
 @1576535179283
 q: Ile zajęłyby płuca jak by je rozprostować?
@@ -25,7 +29,7 @@ a: 23, z czego 1 określa płeć
 
 @1576535179432
 q: Jak duży jest genom?
-a: 3 079 miliardów par zasad (bp). To ok 800 MB informacji.
+a: 3*10^9 (3 miliardy) par zasad (bp). To ok 800 MB informacji.
 
 @1576535179495
 q: Ile mamy genów?
@@ -63,3 +67,53 @@ a: 15-724 bilionów (do końca nie wiadomo)
 
 @1576796960200
 DNA ma strukturę tzw. {{c1::podwójnej helisy}}, którą można porównać do drabiny. Każdy szczebel składa się z {{c2::pary nukleotydów}}. W genomie człowieka takich szczebli jest ponad {{c3::3 mld}}. Genom człowieka liczy około {{c4::23 tys.}} genów – regionów DNA zawierających informacje, które pozwalają organizmowi na wyprodukowanie białek budulcowych i regulatorowych (o ile są kodujące).
+
+# To co na wierzchu: Skóra i włosy
+
+Skóra jest bardzo ważna.
+
+@1577319068233
+q: Formalna nazwa skóry
+a: Układ skórny
+
+@1577319068339
+q: Jak duża jest skóra?
+a: Około 2 metrów kwardatowych, waga 4.5-6.5 kg.
+
+@1577319068437
+q: Gdzie skóra jest najcieńsza a gdzie najgrubsza?
+a: Najcieńsza na powiekach, a najgrubsza na piętach
+
+@1577319069085
+L: Skóra składa się z:
+* Wewnętrznej warstwy zwanej skórą właściwą
+* Zewnętrznego naskórka
+Czyli warstwa rogowa, zbudowana wyłącznie z martwych komórek.<br>
+To dość wstrządające że wszystko co sprawia że jesteśmy piękni jest tak na prawdę martwe. Tam gdzie ciało spotyka się w powietrzem wszyscy jesteśmy nieboszczykami.
+
+@1577319069162
+q: Skóra i włosy są w większości zbudowane z tego samego materiału:
+a: Keratyny <a href="https://pl.wikipedia.org/wiki/Keratyny">Wiki</a>
+
+@1577319069748
+L: Mieszki włosowe pełnią dwojaką funkcję:
+* Wyrastają z nich włosy
+* Wydzielają sebum (łój skórny) tworząc na powierzchni oleistą warstwę
+![img](/Users/marcin/Projects/DeckMarkdown/notes/włos.png)
+
+@1577319069836
+q: Jak się tworzą zaskórniaki?
+a: Gdy się por skóry zablokuje małymi korkami najczęściej z martwej skóry i łoju
+
+@1577319070377
+q: Co się dzieje gdy w zablokowany por zostanie zainfekowany?
+a: Pryszcz
+
+@1577319070453
+q: Jak nazywamy przewlekły stan zapalenia zablokowanyhc porów (pryszcze)?
+a: Trądzikiem
+
+@1577319070552
+qa: Denat
+aq: osoba, która zginęła w wyniku morderstwa, samobójstwa lub wypadku
+pot. ktoś bardzo pijany lub zmęczony

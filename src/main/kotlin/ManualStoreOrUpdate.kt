@@ -1,9 +1,10 @@
+import io.writeNotes
 import kotlinx.coroutines.coroutineScope
 import parse.AnkiApi
 
 suspend fun main() = coroutineScope<Unit> {
-    val api = AnkiApi()
-    val deckName = "Wiedza::Techniczne::Data_Mining"
+    val ankiMarkup = AnkiMarkup()
+    val deckName = "Wiedza::Techniczne::Test"
     val comment = ""
     val noteContent = """
 For {{c2::classification}} problems, it is natural to measure a classifier’s performance in terms of the {{c1::error rate}}. The {{c2::classifier}} predicts the class of each instance: if it is correct, that is counted as a success; if not, it is an error. The {{c1::error rate}} is just the {{c3::proportion of errors made over a whole set of instances}}, and it measures the overall performance of the classifier.
@@ -28,7 +29,7 @@ a: Yes, there is nothing wrong with this: it is just a way of maximizing the amo
 q: Once the validation data has been used, can it be bundled back into the training data?
 a: Yes. To retrain that learning scheme, maximizing the use of data.
     """.trimMargin()
-    storeOrUpdateNote(api, deckName, noteContent, comment)
-        .processedText
+    ankiMarkup.storeOrUpdateNote(deckName, noteContent, comment)
+        .let(::writeNotes)
         .let(::print)
 }

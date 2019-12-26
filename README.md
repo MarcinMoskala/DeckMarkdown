@@ -76,10 +76,11 @@ Currently there are 4 notes types supported:
 * Cloze deletion
 * Basic
 * Basic and reversed
-
-Types that should be introduced:
 * List
 * Set
+
+Types that should be introduced:
+* Graphic deletion
 * General - univerasal type that can cover any notes type
 
 ### Anki Connect
@@ -94,9 +95,8 @@ Example program presenting existing notes from a deck in `ReadAnki`. Program add
 
 ### Next steps
 
-* New notes types
-* Adding missing notes type
-* Deck name and header should be encoded in the text header
+* New note types
+* Allow media
 * Universal id (to support multiple note maintainers)
 * Support multiline code font
 * Distribute as a Kotlin script

@@ -87,7 +87,7 @@ class AnkiApi : RepositoryApi {
         val res2 = text2.readObject<ResultWrapper<List<NoteReceiveDataApi>>>()
         return res2.result
             ?.map { it.toNoteData(deckName) }
-            ?: throw Error(res2.error)
+            ?: throw Error("${res2.error} for $deckName")
     }
 
     override suspend fun addNote(apiNote: ApiNote): ApiNote {
@@ -97,7 +97,7 @@ class AnkiApi : RepositoryApi {
             body = bodyText
         }
         val res = text.readObject<ResultWrapper<Long>>()
-        val id = res.result ?: throw Error(res.error)
+        val id = res.result ?: throw Error("${res.error} for $apiNote")
         return apiNote.copy(noteId = id)
     }
 
@@ -108,7 +108,7 @@ class AnkiApi : RepositoryApi {
             body = bodyText
         }
         val res = text.readObjectOrNull<ResultWrapper<Any?>>()
-        if (res?.error != null) throw Error(res.error)
+        if (res?.error != null) throw Error("${res.error} for $apiNote")
         return apiNote
     }
 
@@ -117,7 +117,7 @@ class AnkiApi : RepositoryApi {
             body = "{\"action\": \"createDeck\", \"version\": 6, \"params\": {\"deck\": \"$name\"}}"
         }
         val res = text.readObject<ResultWrapper<Long>>()
-        if (res.error != null) throw Error(res.error)
+        if (res.error != null) throw Error("${res.error} for $name")
     }
 
     override suspend fun removeDeck(name: String) {
@@ -126,7 +126,7 @@ class AnkiApi : RepositoryApi {
                 "{\"action\": \"deleteDecks\", \"version\": 6, \"params\": {\"decks\": [\"$name\"], \"cardsToo\": true}}"
         }
         val res = text.readObject<ResultWrapper<Long>>()
-        if (res.error != null) throw Error(res.error)
+        if (res.error != null) throw Error("${res.error} for $name")
     }
 
     override suspend fun deleteNotes(ids: List<Long>) {
@@ -136,7 +136,7 @@ class AnkiApi : RepositoryApi {
             body = bodyText
         }
         val res = text.readObjectOrNull<ResultWrapper<Any?>>()
-        if (res?.error != null) throw Error(res.error)
+        if (res?.error != null) throw Error("${res.error} for $ids")
     }
 
     override suspend fun getDecks(): List<String> {

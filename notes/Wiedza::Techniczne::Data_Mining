@@ -1,118 +1,118 @@
 <a href="https://github.com/MarcinMoskala/AnkiMarkdown/blob/master/notes/Wiedza::Techniczne::Data_Mining">Link</a>
 
-@1576577482011
+@1576972132376
 For {{c2::classification}} problems, it is natural to measure a classifier’s performance in terms of the {{c1::error rate}}. The {{c2::classifier}} predicts the class of each instance: if it is correct, that is counted as a success; if not, it is an error. The {{c1::error rate}} is just the {{c3::proportion of errors made over a whole set of instances}}, and it measures the overall performance of the classifier.
 
-@1576577482035
+@1576972132443
 q: How do we call error rate on the training data?
 a: Resubstitution error, because it is calculated by resubstituting the training instances into a classifier that was constructed from them. Although it is not a reliable predictor of the true error rate on new data, it is nevertheless often useful to know.
 
-@1576577482060
+@1576972132478
 q: Is resubstitution error	a reliable predictor of the true error rate? (error rate on the training data)
 a: It is not a reliable predictor of the true error rate on new data, it is nevertheless often useful to know.
 
-@1576577482084
+@1576972132526
 q: How should we predict the performance of a classifier on a new data?
 a: We need to assess its error rate on a dataset that played no part in the formation of the classifier. This independent dataset is called the test set.
 
-@1576577482111
+@1576972132603
 qa: Test set
 aq: This independent dataset that played no part in the formation of the model. Used to predict the true performance on a new data.
 
-@1576577482135
+@1576972132685
 The {{c1::training}} data is used by {{c2::one or more learning methods to come up with classifiers}}. The {{c3::validation}} data is used to {{c4::optimize parameters of those classifiers, or to select a particular one}}. Then the {{c5::test}} data is used to {{c6::calculate the error rate of the final, optimized, method}}. Each of the three sets must be chosen {{c7::independently}}: the {{c3::validation}} set must be different from the {{c1::training}} set to obtain good performance in the optimization or selection stage, and the {{c5::test}} set must be different from both to obtain a reliable estimate of the true error rate.
 
-@1576577482161
+@1576972132726
 q: Once we determined true error rate, can the test set be bundled back into the training data?
 a: Yes, there is nothing wrong with this: it is just a way of maximizing the amount of data used to generate the classifier that will actually be employed in practice. What is important is that error rates are not quoted based on any of this data.
 
-@1576577482185
+@1576972132802
 q: Once the validation data has been used, can it be bundled back into the training data?
 a: Yes. To retrain that learning scheme, maximizing the use of data.
 
-@1576600287037
+@1576972132868
 qa: Bernoulli process
 aq: In statistics, a succession of independent events that either succeed or fail. The classic example is coin tossing. Each toss is an independent event.
 
-@1576600287117
+@1576972132906
 qa: Test set stratification
 aq: When we balance samples in the test set to have each category properly represented.
 
-@1576600287174
+@1576972132953
 q: Stratified holdout vs repeated holdout method of error rate estimation
 a: In stratified holdout we test once, with balanced test set. In repeated holdout we test multiple times on multiple test sets.
 
-@1576600287224
+@1576972133010
 qa: Cross-validation
 aq: When we calculate the model many times every time on a different training set, and then test on a different test set. As a result we have unbiased success rate estimation.
 
-@1576600287276
+@1576972133051
 qa: Leave-one-out validation
 aq: Simply n-fold cross-validation, where n is the number of instances in the dataset. Each instance in turn is left out, and the learning method is trained on all the remaining instances
 
-@1576600287340
+@1576972133132
 q: The problem with leave-one-out validation
 a: Apart from the computational expense, it always teats on unstratified test set. A dramatic, although highly artificial, illustration of the problems this might cause is to imagine a classes. The best that an inducer can do with random data is to predict the majority class, giving a true error rate of 50%. But in each fold of leave-oneout, the opposite class to the test instance is in the majority—and therefore the predictions will always be incorrect, leading to an estimated error rate of 100%!completely random dataset that contains the same number of each of two
 
-@1576600287381
+@1576972133176
 qa: The bootstrap validation
 aq: For this, a dataset of n instances is sampled n times, with replacement, to give another dataset of n instances. Because some elements in this second dataset will (almost certainly) be repeated, there must be some instances in the original dataset that have not been picked: we will use these as test instances
 
-@1576600287466
+@1576972133235
 qa: Mean squared error
 aq: Mean of the difference between prediction and actual value, squared
 
-@1576600287514
+@1576972133277
 qa: Square operation x
 aq: x * x (name)
 
-@1576600287580
+@1576972133358
 q: 25 square
 a: 625
 
-@1576600287639
+@1576972133468
 qa: Square root x
 aq: sqrt(x), or y where y * y = x
 
-@1576600287702
+@1576972133535
 q: Square root of 25
 a: 5
 
-@1576600287736
+@1576972133573
 qa: Quadratic loss function
 aq: Sum of the differences between label probability and it being chosen or not (0 or 1). So if 3 classes, y_true = [b, a] then a = [[0, 1, 0], [1, 0, 0]]. If predicted probabilities are [[0.25, 0.5, 0.25], [0.75, 0.25, 0]] then the result is 0.25^2 + 0.5^2 + 0.25^2 + 0.25^2 + 0.25^2 = 0.375 + 0.125 = 0.5
 
-@1576612876401
+@1576972133629
 qa: Informational loss function
 aq: Sum of -log2 p of the chosen class. We want to minimize it - the higher probabiliy the closer to 0, The lower probability, the bigger the loss is.
 
-@1576612876502
+@1576972133665
 qa: True positiove
 aq: Classified correctly as yes
 
-@1576612876554
+@1576972133704
 qa: True negative
 aq: Classified correctly as no
 
-@1576612876602
+@1576972133751
 qa: False positiove
 aq: Classified incorrectly as yes
 
-@1576612876650
+@1576972133806
 qa: False negative
 aq: Classified incorrectly as no
 
-@1576612876700
+@1576972133851
 qa: Confusion matrix
 aq: Matrix in which element shows the number of test examples for which the actual class is the row and the predicted class is the column.
 
-@1576612876750
+@1576972133905
 q: What does Kappa statistic measure?
 a: The agreement between two confusion matrixes
 
-@1576796961100
+@1576972133932
 q: ROC stands for
 a: Receiver Operating Characteristic.
 
-@1576796961167
+@1576972133976
 {{c1::ROC (Receiver Operating Characteristic)}} plot the number of {{c2::positives included in the sample}} on the vertical axis, expressed as a {{c3::percentage of the total number of positives}}, against the {{c4::number of negatives included in the sample}}, expressed as a {{c5::percentage of the total number of negatives, on the horizontal axis}}.
