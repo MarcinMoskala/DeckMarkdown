@@ -1,13 +1,17 @@
-import io.textWriteNotes
-import io.writeNotes
+package note.markdown
+
+import Note
+import note.DefaultParser
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class TextWriteTests {
+class MarkdownTests {
+
+    private val parser = DefaultParser
 
     @Test
     fun `No notes produce empty`() {
-        val text = textWriteNotes(listOf())
+        val text = parser.markdownWriteNotes(listOf())
         val expected = ""
         assertEquals(expected, text)
     }
@@ -18,7 +22,7 @@ class TextWriteTests {
             Note.Cloze(1, "This is text {{c1::1}}"),
             Note.Cloze(2, "And this {{c1::text}} number is {{c2::2}}")
         )
-        val text = textWriteNotes(notes)
+        val text = parser.markdownWriteNotes(notes)
         val expected = """
 This is text 1
 
@@ -35,7 +39,7 @@ And this text number is 2
             Note.BasicAndReverse(3, "GGG", "HHH HHH HHH ;,!@#$%^&"),
             Note.Basic(4, "CCC", "DDD")
         )
-        val text = textWriteNotes(notes)
+        val text = parser.markdownWriteNotes(notes)
         val expected = """
 Q: AAA
 A: BBB
@@ -59,7 +63,7 @@ A: DDD
             Note.Cloze(2, "And this {{c1::text}} number is {{c2::2}}"),
             Note.BasicAndReverse(3, "GGG", "HHH HHH")
         )
-        val text = textWriteNotes(notes)
+        val text = parser.markdownWriteNotes(notes)
         val expected = """
 Q: AAA
 A: BBB

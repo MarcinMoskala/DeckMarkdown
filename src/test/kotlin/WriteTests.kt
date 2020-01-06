@@ -1,13 +1,15 @@
 import Note.ListDeletion.Item
-import io.writeNotes
+import note.DefaultParser
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class WriteTests {
 
+    private val parser = DefaultParser
+
     @Test
     fun `No notes produce empty`() {
-        val text = writeNotes(listOf())
+        val text = parser.writeNotes(listOf())
         val expected = ""
         assertEquals(expected, text)
     }
@@ -18,7 +20,7 @@ class WriteTests {
             Note.Cloze(1, "This is text {{c1::1}}"),
             Note.Cloze(2, "And this {{c1::text}} number is {{c2::2}}")
         )
-        val text = writeNotes(notes)
+        val text = parser.writeNotes(notes)
         val expected = """
 @1
 This is text {{c1::1}}
@@ -37,7 +39,7 @@ And this {{c1::text}} number is {{c2::2}}
             Note.BasicAndReverse(3, "GGG", "HHH HHH HHH ;,!@#$%^&"),
             Note.Basic(4, "CCC", "DDD")
         )
-        val text = writeNotes(notes)
+        val text = parser.writeNotes(notes)
         val expected = """
 @1
 q: AAA
@@ -63,7 +65,7 @@ a: DDD
         val notes = listOf(
             Note.ListDeletion(1, title = "AAA", items = listOf(Item("A"), Item("B", "Comment"), Item("C")))
         )
-        val text = writeNotes(notes)
+        val text = parser.writeNotes(notes)
         val expected = """
 @1
 L: AAA
@@ -82,7 +84,7 @@ Comment
             Note.Cloze(2, "And this {{c1::text}} number is {{c2::2}}"),
             Note.BasicAndReverse(3, "GGG", "HHH HHH")
         )
-        val text = writeNotes(notes)
+        val text = parser.writeNotes(notes)
         val expected = """
 @1
 q: AAA

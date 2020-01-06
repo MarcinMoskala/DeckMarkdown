@@ -1,5 +1,8 @@
 import kotlinx.coroutines.coroutineScope
-import parse.*
+import parse.AnkiApi
+import parse.ApiNote
+import parse.ApiNoteModel
+import parse.CardTemplate
 
 suspend fun main() = coroutineScope<Unit> {
     val api = AnkiApi()

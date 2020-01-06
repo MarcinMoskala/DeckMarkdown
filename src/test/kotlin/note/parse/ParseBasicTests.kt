@@ -1,8 +1,14 @@
-import io.parseNotes
+package note.parse
+
+import Note
+import note.BasicParser
+import note.DeckParser
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class ParseBasicTests {
+
+    private val parser = DeckParser(processors = listOf(BasicParser))
 
     @Test
     fun `Simple and multiline Basic is parsed correctly`() {
@@ -20,7 +26,7 @@ Line 3
             Note.Basic(front = "AAA", back = "BBB"),
             Note.Basic(front = "QLine 1\nQLine 2", back = "Line 1\nLine 2\nLine 3")
         )
-        assertEquals(expected, parseNotes(text))
+        assertEquals(expected, parser.parseNotes(text))
     }
 
     @Test
@@ -40,7 +46,7 @@ a: BBB
             Note.Basic(front = "AAA", back = "BBB"),
             Note.Basic(front = "AAA", back = "BBB")
         )
-        assertEquals(expected, parseNotes(text))
+        assertEquals(expected, parser.parseNotes(text))
     }
 
     @Test
@@ -68,6 +74,6 @@ a:
             Note.Basic(front = "AAA", back = "BBB"),
             Note.Basic(front = "AAA", back = "BBB")
         )
-        assertEquals(expected, parseNotes(text))
+        assertEquals(expected, parser.parseNotes(text))
     }
 }

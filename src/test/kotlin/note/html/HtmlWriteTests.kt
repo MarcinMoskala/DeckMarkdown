@@ -1,13 +1,17 @@
-import io.htmlWriteNotes
-import io.writeNotes
+package note.html
+
+import Note
+import note.DefaultParser
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class HtmlWriteTests {
 
+    val parser = DefaultParser
+
     @Test
     fun `No notes produce empty`() {
-        val text = writeNotes(listOf())
+        val text = parser.writeNotes(listOf())
         val expected = ""
         assertEquals(expected, text)
     }
@@ -18,7 +22,7 @@ class HtmlWriteTests {
             Note.Cloze(1, "This is text {{c1::1}}"),
             Note.Cloze(2, "And this {{c1::text}} number is {{c2::2}}")
         )
-        val text = htmlWriteNotes(notes)
+        val text = parser.htmlWriteNotes(notes)
         val expected = """
 <div>This is text <b>1</b></div>
 <div>And this <b>text</b> number is <b>2</b></div>
@@ -34,7 +38,7 @@ class HtmlWriteTests {
             Note.BasicAndReverse(3, "GGG", "HHH HHH HHH ;,!@#$%^&"),
             Note.Basic(4, "CCC", "DDD")
         )
-        val text = htmlWriteNotes(notes)
+        val text = parser.htmlWriteNotes(notes)
         val expected = """
 <div><i>Q:</i> AAA<br><i>A:</i> BBB</div>
 <div><i>Q/A:</i> EEE<br><i>A/Q:</i> FFF</div>
@@ -51,7 +55,7 @@ class HtmlWriteTests {
             Note.Cloze(2, "And this {{c1::text}} number is {{c2::2}}"),
             Note.BasicAndReverse(3, "GGG", "HHH HHH")
         )
-        val text = htmlWriteNotes(notes)
+        val text = parser.htmlWriteNotes(notes)
         val expected = """
 <div><i>Q:</i> AAA<br><i>A:</i> BBB</div>
 <div>And this <b>text</b> number is <b>2</b></div>

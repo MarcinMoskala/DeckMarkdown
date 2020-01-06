@@ -1,6 +1,5 @@
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 inline fun <reified T: Throwable> assertThrows(expectedMessage: String? = null, operation: () -> Unit) {
     val exception = try {

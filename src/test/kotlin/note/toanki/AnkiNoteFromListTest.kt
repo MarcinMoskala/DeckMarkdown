@@ -1,24 +1,29 @@
-import Note.ListDeletion.Item
-import org.junit.Test
+package note.toanki
 
+import Note
+import Note.ListDeletion.Item
+import note.DeckParser
+import note.ListDeletionParser
+import org.junit.Test
 import parse.ApiNote
-import parse.toApiNoteOrText
 import kotlin.test.assertEquals
 
-class MakeNotesTest {
+class AnkiNoteFromListTest {
+
+    val parser = DeckParser(listOf(ListDeletionParser))
 
     @Test
     fun `Example ListDeletion is correctly transformed`() {
         val id = 123L
         val deckName = "DeckName"
         val comment = "Comment"
-        val actual = Note.ListDeletion(
+        val note = Note.ListDeletion(
             id = id,
             title = "AAA",
             generalComment = "General Comment",
             items = listOf(Item("a"), Item("b", "comment"))
         )
-            .toApiNoteOrText(deckName, comment)
+        val actual = parser.noteToApiNote(note, deckName, comment)
         val expected = ApiNote(
             noteId = id,
             deckName = deckName,

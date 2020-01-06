@@ -1,8 +1,14 @@
-import io.parseNotes
+package note.parse
+
+import Note
+import note.ClozeParser
+import note.DeckParser
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class ParseClozeTests {
+
+    private val parser = DeckParser(processors = listOf(ClozeParser))
 
     @Test
     fun `Simple and multiline Cloze is parsed correctly`() {
@@ -16,7 +22,7 @@ dolor sit amet
             Note.Cloze(text = "Lorem {{c1::ipsum}} dolor sit amet"),
             Note.Cloze(text = "Lorem {{c1::ipsum}}\ndolor sit amet")
         )
-        assertEquals(expected, parseNotes(text))
+        assertEquals(expected, parser.parseNotes(text))
     }
 
     @Test
@@ -26,7 +32,7 @@ Lorem {ipsum} dolor sit {amet}
 
 Lorem {{c1::ipsum}} dolor sit {{c2::amet}}
         """.trimIndent()
-        val (first, second) = parseNotes(text)
+        val (first, second) = parser.parseNotes(text)
         assertEquals(second, first)
     }
 }

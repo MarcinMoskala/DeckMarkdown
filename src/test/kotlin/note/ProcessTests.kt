@@ -1,9 +1,11 @@
+package note
+
 import org.junit.Test
-import io.parseNotes
-import io.writeNotes
 import kotlin.test.assertEquals
 
 class ProcessTests {
+
+    val parser = DefaultParser
 
     @Test
     fun `Basically formatted text stays the same after reading and writing`() {
@@ -32,8 +34,8 @@ class ProcessTests {
         ).map { it.trimIndent() }
 
         for (text in texts) {
-            val notes = parseNotes(text)
-            val processed = writeNotes(notes)
+            val notes = parser.parseNotes(text)
+            val processed = parser.writeNotes(notes)
             assertEquals(text, processed)
         }
     }

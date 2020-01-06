@@ -1,8 +1,14 @@
-import io.parseNotes
+package note.parse
+
+import Note
+import note.DeckParser
+import note.TextParser
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class ParseTextTests {
+
+    val parser = DeckParser(listOf(TextParser))
 
     @Test
     fun `Pure text with no markup is a text`() {
@@ -20,6 +26,6 @@ Lorem ipsum
             Note.Text(text = "Line 1\nLine 2\nLine 3"),
             Note.Text(text = "Lorem ipsum")
         )
-        assertEquals(expected, parseNotes(text))
+        assertEquals(expected, parser.parseNotes(text))
     }
 }

@@ -1,8 +1,14 @@
-import io.parseNotes
+package note.parse
+
+import Note
+import note.DeckParser
+import note.ReminderParser
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class ParseReminderTests {
+
+    val parser = DeckParser(listOf(ReminderParser))
 
     @Test
     fun `Uppercase Reminder text produces Reminder note`() {
@@ -20,7 +26,7 @@ Reminder: Lorem ipsum
             Note.Reminder(text = "Line 1\nLine 2\nLine 3"),
             Note.Reminder(text = "Lorem ipsum")
         )
-        assertEquals(expected, parseNotes(text))
+        assertEquals(expected, parser.parseNotes(text))
     }
 
     @Test
@@ -39,7 +45,7 @@ reminder: Lorem ipsum
             Note.Reminder(text = "Line 1\nLine 2\nLine 3"),
             Note.Reminder(text = "Lorem ipsum")
         )
-        assertEquals(expected, parseNotes(text))
+        assertEquals(expected, parser.parseNotes(text))
     }
 
     @Test
@@ -58,7 +64,7 @@ r: Lorem ipsum
             Note.Reminder(text = "Line 1\nLine 2\nLine 3"),
             Note.Reminder(text = "Lorem ipsum")
         )
-        assertEquals(expected, parseNotes(text))
+        assertEquals(expected, parser.parseNotes(text))
     }
 
     @Test
@@ -77,6 +83,6 @@ AAA BBB
             Note.Reminder(text = "AAA BBB"),
             Note.Reminder(text = "AAA BBB")
         )
-        assertEquals(expected, parseNotes(text))
+        assertEquals(expected, parser.parseNotes(text))
     }
 }

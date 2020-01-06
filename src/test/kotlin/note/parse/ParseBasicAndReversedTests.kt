@@ -1,8 +1,15 @@
-import io.parseNotes
+package note.parse
+
+import Note
+import note.BasicAndReversedParser
+import note.DeckParser
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class ParseBasicAndReversedTests {
+
+    private val parser =
+        DeckParser(processors = listOf(BasicAndReversedParser))
 
     @Test
     fun `Simple and multiline BasicAndReversed is parsed correctly`() {
@@ -20,7 +27,7 @@ Line 3
             Note.BasicAndReverse(front = "AAA", back = "BBB"),
             Note.BasicAndReverse(front = "QLine 1\nQLine 2", back = "Line 1\nLine 2\nLine 3")
         )
-        assertEquals(expected, parseNotes(text))
+        assertEquals(expected, parser.parseNotes(text))
     }
 
     @Test
@@ -40,7 +47,7 @@ aQ: BBB
             Note.BasicAndReverse(front = "AAA", back = "BBB"),
             Note.BasicAndReverse(front = "AAA", back = "BBB")
         )
-        assertEquals(expected, parseNotes(text))
+        assertEquals(expected, parser.parseNotes(text))
     }
 
     @Test
@@ -68,6 +75,6 @@ aq:
             Note.BasicAndReverse(front = "AAA", back = "BBB"),
             Note.BasicAndReverse(front = "AAA", back = "BBB")
         )
-        assertEquals(expected, parseNotes(text))
+        assertEquals(expected, parser.parseNotes(text))
     }
 }

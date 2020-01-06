@@ -1,17 +1,20 @@
-import Note.ListDeletion.Item
+package api
+
+import Note
+import assertThrows
 import kotlinx.coroutines.runBlocking
+import note.DefaultParser
 import org.junit.Assume.assumeTrue
 import org.junit.Before
 import org.junit.Test
 import parse.AnkiApi
-import parse.toApiNote
-import parse.toNote
 import kotlin.random.Random
 import kotlin.test.assertEquals
 
 class AnkiApiTests {
 
     val api = AnkiApi()
+    val parser = DefaultParser
 
     @Before
     fun beforeMethod() = runBlocking {
@@ -37,7 +40,7 @@ class AnkiApiTests {
     fun `After notes added they exists, after removed, not anymore`() = runBlocking {
         val deckName = "MyName"
         val notes = listOf(Note.BasicAndReverse(1, "AAA", "BBB"))
-            .map { it.toApiNote(deckName, "") }
+            .map { parser.noteToApiNote(it, deckName, "") }
         try {
             api.createDeck(deckName)
             assertDeckAdded(deckName)
@@ -64,7 +67,11 @@ class AnkiApiTests {
     @Test // Same for incorrect names
     fun `Adding to a deck that does not exist causes error throw`() = runBlocking {
         val deckName = "MyNameKOKOKOKOKO" + Random.nextInt()
-        assertThrows<Error> { api.addNote(Note.Cloze(1, "AAA").toApiNote(deckName, "")) }
+        assertThrows<Error> {
+            val note = Note.Cloze(1, "AAA")
+            val apiNote = parser.noteToApiNote(note, deckName, "")
+            api.addNote(apiNote)
+        }
     }
 
 //    @Test
