@@ -3,7 +3,16 @@ package note
 import Note
 import parse.ApiNote
 
-val DefaultParser = DeckParser(processors = listOf(BasicParser, BasicAndReversedParser, ReminderParser, ClozeParser, TextParser))
+val DefaultParser = DeckParser(
+    processors = listOf(
+        BasicParser,
+        BasicAndReversedParser,
+        ReminderParser,
+        ListDeletionParser,
+        ClozeParser,
+        TextParser
+    )
+)
 
 class DeckParser(private val processors: List<NoteProcessor<*>>) {
 

@@ -18,7 +18,7 @@ class AnkiApiTests {
 
     @Before
     fun beforeMethod() = runBlocking {
-         assumeTrue(api.connected())
+        assumeTrue(api.connected())
     }
 
     @Test
