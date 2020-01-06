@@ -48,6 +48,12 @@ fun Note.toApiNoteOrText(deckName: String, comment: String): ApiNoteOrText = whe
                     }
                     .toMap()
     )
+    is Note.General -> ApiNote(
+        noteId = id ?: NO_ID,
+        deckName = deckName,
+        modelName = modelName,
+        fields = fields
+    )
 }
 
 fun ApiNoteOrText.toNote(): Note = when (this) {

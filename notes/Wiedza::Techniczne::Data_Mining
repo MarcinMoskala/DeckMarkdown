@@ -113,6 +113,3 @@ a: The agreement between two confusion matrixes
 @1576972133932
 q: ROC stands for
 a: Receiver Operating Characteristic.
-
-@1576972133976
-{{c1::ROC (Receiver Operating Characteristic)}} plot the number of {{c2::positives included in the sample}} on the vertical axis, expressed as a {{c3::percentage of the total number of positives}}, against the {{c4::number of negatives included in the sample}}, expressed as a {{c5::percentage of the total number of negatives, on the horizontal axis}}.

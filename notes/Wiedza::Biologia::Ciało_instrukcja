@@ -21,7 +21,7 @@ q: Ile zajęłyby płuca jak by je rozprostować?
 a: Pokryłyby kort tenisowy
 
 @1576535179337
-DNA tworzone jest przez poszczególne {{c1::geny}}. Zbiór {{c1::genów}} nazywamy {{c2::chromosomem}}. Mamy {{c4::23}} {{c2::chromosomy}}. Wszystkie nasze geny tworzą {{c3::genom}}. Nasz cały {{c3::genom}} ma około {{c4::3 miliardy}} par zasad.
+DNA tworzone jest przez poszczególne {{c1::geny}}. Zbiór {{c1::genów}} nazywamy {{c2::chromosomem}}. Mamy {{c4::23}} {{c2::chromosomy}}. Wszystkie nasze geny tworzą {{c3::genom}}. Nasz cały {{c3::genom}} ma około {{c5::3 miliardy}} par zasad.
 
 @1576535179382
 q: Ile mamy chromosomów?
@@ -68,6 +68,24 @@ a: 15-724 bilionów (do końca nie wiadomo)
 @1576796960200
 DNA ma strukturę tzw. {{c1::podwójnej helisy}}, którą można porównać do drabiny. Każdy szczebel składa się z {{c2::pary nukleotydów}}. W genomie człowieka takich szczebli jest ponad {{c3::3 mld}}. Genom człowieka liczy około {{c4::23 tys.}} genów – regionów DNA zawierających informacje, które pozwalają organizmowi na wyprodukowanie białek budulcowych i regulatorowych (o ile są kodujące).
 
+# Ogólne
+
+@1578079768540
+qa: Nerki
+aq: Produkują mocz i usuwają zbędne płyny i substancje
+
+@1578079768568
+qa: Wątroba
+aq: Pełni szereg funkcji, w tym detoksykacyjną, immunologiczną, wytwarzanie żółci, gospodarka składnikami odżywczymi: białkami, węglowodanami, tłuszczami, magazynującą – gromadzi zapasy żelaza oraz witamin
+
+@1578179073686
+q: Inna nazwa na czerwone krwinki
+a: Erytrocyty
+
+@1578179073736
+q: Gdzie powstają czerwone krwinki?
+a: W szpiku kostnym
+
 # To co na wierzchu: Skóra i włosy
 
 Skóra jest bardzo ważna.
@@ -104,7 +122,6 @@ L: Mieszki włosowe pełnią dwojaką funkcję:
 @1577319069836
 q: Jak się tworzą zaskórniaki?
 a: Gdy się por skóry zablokuje małymi korkami najczęściej z martwej skóry i łoju
-
 <img src="media/zaskorniaki.png" style="zoom:50%;" />
 
 @1577319070377
@@ -112,10 +129,10 @@ q: Co się dzieje gdy w zablokowany por zostanie zainfekowany?
 a: Pryszcz
 
 @1577319070453
-q: Jak nazywamy przewlekły stan zapalenia zablokowanyhc porów (pryszcze)?
+q: Jak nazywamy przewlekły stan zapalenia zablokowanych porów (pryszcze)?
 a: Trądzikiem
 
 @1577319070552
 qa: Denat
-aq: osoba, która zginęła w wyniku morderstwa, samobójstwa lub wypadku
+aq: Osoba, która zginęła w wyniku morderstwa, samobójstwa lub wypadku
 pot. ktoś bardzo pijany lub zmęczony

@@ -3,7 +3,7 @@ import kotlinx.coroutines.coroutineScope
 
 suspend fun main() = coroutineScope<Unit> {
     with(AnkiConnector()) {
-        readNotesFromDeck(deckName = "Wiedza::Biologia::Ciało_instrukcja")
+        readNotesFromDeck(deckName = "Wiedza::Techniczne::ETH")
             .let(::writeNotes)
             .let(::print)
     }

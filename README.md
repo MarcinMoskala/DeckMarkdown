@@ -96,7 +96,6 @@ Example program presenting existing notes from a deck in `ReadAnki`. Program add
 ### Next steps
 
 * New note types
-* Allow media
 * Universal id (to support multiple note maintainers)
 * Support multiline code font
 * Distribute as a Kotlin script

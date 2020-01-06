@@ -27,7 +27,7 @@ interface RepositoryApi {
 
 data class ResultWrapper<T>(val result: T? = null, val error: String? = null)
 
-sealed class ApiNoteOrText()
+sealed class ApiNoteOrText
 data class Text(val text: String) : ApiNoteOrText()
 data class ApiNote(
     val noteId: Long = NO_ID, // For creation, API do not care

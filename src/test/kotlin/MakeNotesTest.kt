@@ -26,7 +26,7 @@ class MakeNotesTest {
             fields = mapOf(
                 "Title" to "AAA",
                 "General Comment" to "General Comment",
-                "Comment" to comment,
+                "Extra" to comment,
                 "1" to "a",
                 "1 comment" to "",
                 "2" to "b",

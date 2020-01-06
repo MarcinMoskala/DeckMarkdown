@@ -17,5 +17,6 @@ fun textWriteNotes(notes: List<Note>): String = notes.joinToString(separator = "
         is Note.Reminder -> it.text
         is Note.Text -> it.text
         is Note.ListDeletion -> TODO()
+        is Note.General -> TODO()
     }
 }

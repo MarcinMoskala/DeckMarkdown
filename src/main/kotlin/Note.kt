@@ -23,6 +23,12 @@ sealed class Note {
         val text: String
     ) : Note()
 
+    data class General(
+        override val id: Long? = null,
+        val modelName: String,
+        val fields: Map<String, String>
+    ) : Note()
+
     data class ListDeletion(
         override val id: Long? = null,
         val type: ListType = ListType.List,

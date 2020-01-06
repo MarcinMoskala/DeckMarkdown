@@ -23,6 +23,7 @@ fun writeNotes(notes: List<Note>): String = notes.joinToString(separator = "\n\n
             .plus(it.items.joinToString(separator = "\n") {
                 if (it.comment.isBlank()) "* ${it.value}" else "* ${it.value}\n${it.comment}"
             })
+        is Note.General -> TODO()
         is Note.Cloze -> it.text
         is Note.Text -> it.text
     }

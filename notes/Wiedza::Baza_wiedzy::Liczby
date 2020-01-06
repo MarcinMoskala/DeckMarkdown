@@ -1,5 +1,7 @@
 <a href="https://github.com/MarcinMoskala/AnkiMarkdown/blob/master/notes/Wiedza::Baza_wiedzy::Liczby">Link</a>
 
+# Duże liczby
+
 Funkcjonują 2 skale: krótka i długa. W obydwu używa się przedrostków mających korzenie w kolejnych liczbach łacińskich:
 Milion, Bilion, Trylion, Kwadrylion, ... W krótkiej skali (język angielski) każdy kolejny ma o 3 zera więcej.
 W długiej skali (stosowanej w polsce) po nich następuje odpowiednik z końcówką -ard. Tak więc po Milion jest Miliard, a bo Bilion Biliard.
@@ -46,6 +48,8 @@ aq: 10^100
 qa: Googolplex
 aq: 10^10^100
 
+# SI (Większe od 1)
+
 Przedrostek SI – prefiks wyrażający wielokrotności i podwielokrotności jednostek miar opartych o system metryczny.
 Przedrostki zostały wdrożone w ramach układu SI, choć okazjonalnie stosuje się je także do jednostek spoza tego systemu (np. mililitr czy milisekunda kątowa).
 https://pl.wikipedia.org/wiki/Przedrostek_SI
@@ -82,6 +86,38 @@ aq: 10^15 przedrostek SI (metric prefix)
 qa: Eksa (E)
 aq: 10^18 przedrostek SI (metric prefix)
 
+## Cwiczenia
+
+@1577541973786
+q: (Kilo (k))^2
+a: Mega (M) (10^3^2 = 10^6)
+
+@1577541973888
+q: (Mega (M))^2
+a: Tera (T) (10^6^2 = 10^12)
+
+@1577541973988
+q: (Giga (G))^2
+a: Eksa (E) (10^9^2 = 10^18)
+
+@1577541974088
+q: Kilo (k) * Tera (T)
+a: Peta (P) (10^3 * 10^12 = 10^15)
+
+@1577541974185
+q: Kilo (k) * Mega (M)
+a: Giga (G) (10^3 * 10^6 = 10^9)
+
+@1577541974284
+q: Giga (G) / Mega (M)
+a: Kilo (k) (10^9 / 10^6 = 10^3)
+
+@1577541974386
+q: Eksa (E) / Tera (T)
+a: Mega (M) (10^18 / 10^13 = 10^6)
+
+# SI mniejsze od 1
+
 @1576969352413
 qa: Decy (d)
 aq: 10^-1 przedrostek SI (metric prefix)
@@ -105,3 +141,46 @@ aq: 10^-9 przedrostek SI (metric prefix)
 @1576969352639
 qa: Piko (p)
 aq: 10^-12 przedrostek SI (metric prefix)
+
+## Cwiczenia
+
+@1577541974636
+q: Mili (m) * Mikro (µ)
+a: Nano (n) (10^-3 * 10^-6 = 10^-9)
+
+@1577541974736
+q: Mili (m) * Nano (n)
+a: Piko (p) (10^-3 * 10^-9 = 10^-12)
+
+@1577541974836
+q: 1 / (Mili (m))
+a: Kilo (k) (1 / 10^-3 = 10^3)
+
+@1577541974935
+q: 1 / (Kilo (k))
+a: Mili (m) (1 / 10^3 = 10^-3)
+
+@1577541975034
+q: 1 / (Mikro (µ))
+a: Mega (M) (1 / 10^-6 = 10^6)
+
+@1577541975134
+q: 1 / (Mega (M))
+a: Mikro (µ) (1 / 10^6 = 10^-6)
+
+@1577541975232
+q: 1 / (Nano (n))
+a: Giga (G) (1 / 10^-9 = 10^9)
+
+@1577541975330
+q: 1 / (Giga (G))
+a: Nano (n) (1 / 10^9 = 10^-9)
+
+@1577541975427
+q: 1 / (Piko (p))
+a: Tera (T) (1 / 10^-12 = 10^12)
+
+@1577541975526
+q: 1 / (Tera (T))
+a: Piko (p) (1 / 10^12 = 10^-12)
+
