@@ -1,5 +1,6 @@
-Link: 
-Source: http://spockframework.org/spock/docs/1.1/all_in_one.html#_method_unrolling
+<a href="https://github.com/MarcinMoskala/AnkiMarkdown/blob/master/notes/Wiedza::Techniczne::Allegro::Spock">Link</a>
+<a href="http://spockframework.org/spock/docs/1.1/all_in_one.html#_method_unrolling">Source</a>
+***
 
 ## Specification
 
@@ -24,3 +25,54 @@ def obj = new ClassUnderSpecification()
 def coll = new Collaborator()
 ```
 
+@1579184679727
+q: What is the difference in Speck between initialising fields right at the point of declaration and in setup function?
+a: Those are equivalents because Speck will initialise properties separately for every test case.
+
+Sometimes you need to share an object between feature methods. For example, the object might be very expensive to create, or you might want your feature methods to interact with each other. To achieve this, declare a `@Shared` field. Again it’s best to initialize the field right at the point of declaration. (Semantically, this is equivalent to initializing the field at the very beginning of the `setupSpec()` method.)
+
+```groovy
+@Shared res = new VeryExpensiveResource()
+```
+
+@1579184679857
+q: What is @Shared doing in Groovy?
+a: Field will be static and one for all tests.
+
+## Fixture methods
+
+@1579184680034
+There are following fixture methods in Spock Specification:
+def {{c1::setup}}() {}          // run {{c2::before every feature method}}
+def {{c3::cleanup}}() {}        // run {{c4::after every feature method}}
+def {{c5::setupSpec}}() {}      // run {{c6::before the first feature method}}
+def {{c7::cleanupSpec}}() {}    // run {{c7::after the last feature method}}
+
+## Feature Methods
+
+@1579184680140
+```groovy
+def "pushing an element on the stack"() {{c1::
+  // blocks go here
+}}
+```
+
+Conceptually, a feature method consists of four phases:
+
+* Set up the feature’s fixture
+* Provide a *stimulus* to the system under specification
+* Describe the *response* expected from the system
+* Clean up the feature’s fixture
+
+## Blocks
+
+@1579185784157
+In Spock feature methods there are the following blocks: {{c1::setup, when, then, expect, cleanup, and where}}. Any statements between the beginning of the method and the first explicit block belong to an implicit {{c2::setup}} block.
+
+@1579185784209
+q: Can he have feature method without any explicit block?
+a: No, the presence of an explicit block is what makes a method a feature method. Blocks divide a method into distinct sections, and cannot be nested.
+
+
+
+![Blocks2Phases](/Users/marcin.moskala/Projects/AnkiMarkdown/notes/media/Blocks2Phases.png)

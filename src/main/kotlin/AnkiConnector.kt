@@ -17,19 +17,27 @@ class AnkiConnector(
 
 //    val htmlNotesFile = File("notesHtml")
 
-        notesFile.listFiles()!!.filterNot { it.isDirectory }.forEach { file ->
-            val name = file.name
-            val body = file.readText().dropMediaFolderPrefix()
-            val comment = body.substringBefore("\n")
-            val notes = storeOrUpdateNoteText(deckName = name, noteContent = body, comment = comment)
-            val text = parser.writeNotes(notes)
-            file.writeText(text.addMediaFolderPrefix())
+        notesFile.listFiles()
+            .orEmpty()
+            .filterNot { it.isDirectory }
+            .forEach { file ->
+                val name = file.name
+                val body = file.readText()
+                val (text, comment) = separateComment(body)
+                val notes = storeOrUpdateNoteText(
+                    deckName = name,
+                    noteContent = text.dropMediaFolderPrefix(),
+                    comment = comment.orEmpty()
+                )
+                val textAfter = parser.writeNotes(notes)
+                val bodyAfter = comment?.let { "$it\n***\n\n" }.orEmpty()+ textAfter.addMediaFolderPrefix()
+                file.writeText(bodyAfter)
 
-//        if(htmlNotesFile.exists() && htmlNotesFile.isDirectory) {
-//            writeHtml(htmlNotesFile, name, notes)
-//            writeFormattedText(htmlNotesFile, name, notes)
-//        }
-        }
+//                if(htmlNotesFile.exists() && htmlNotesFile.isDirectory) {
+//                    writeHtml(htmlNotesFile, name, notes)
+//                    writeFormattedText(htmlNotesFile, name, notes)
+//                }
+            }
     }
 
     private suspend fun syncMedia(folderName: String) {
@@ -44,6 +52,17 @@ class AnkiConnector(
     suspend fun readNotesFromDeck(deckName: String): List<Note> =
         api.getNotesInDeck(deckName)
             .map(parser::apiNoteToNote)
+
+    private data class TextAndComment(val text: String, val comment: String? = null)
+
+    private fun separateComment(text: String): TextAndComment {
+        val possibleIntroTextWithSeparator = text.substringBefore("\n\n")
+        val lastLine = possibleIntroTextWithSeparator.substringAfterLast("\n").trimEnd()
+        val isHeaderEnding = lastLine.containsOnly("*") && lastLine.length >= 3
+        if (!isHeaderEnding) return TextAndComment(text)
+        val introText = possibleIntroTextWithSeparator.substringBeforeLast("\n")
+        return TextAndComment(text.substringAfter("\n\n"), introText)
+    }
 
     suspend fun storeOrUpdateNoteText(deckName: String, noteContent: String, comment: String): List<Note> {
         if (!api.connected()) {
@@ -83,6 +102,8 @@ class AnkiConnector(
         return newCards
     }
 }
+
+private fun String.containsOnly(text: String): Boolean = this.replace("*", "").isEmpty()
 
 /**
  * This is done because all media files needs to be located in "media", but later in Anki
