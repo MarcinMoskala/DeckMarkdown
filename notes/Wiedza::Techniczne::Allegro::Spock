@@ -1,0 +1,26 @@
+Link: 
+Source: http://spockframework.org/spock/docs/1.1/all_in_one.html#_method_unrolling
+
+## Specification
+
+A specification is represented as a Groovy class that extends from `spock.lang.Specification`.
+
+@1579181219157
+Order of elements in specification
+class MyFirstSpecification extends Specification {
+  // {{c1::fields}}
+  // {{c2::fixture methods}}
+  // {{c3::feature methods}}
+  // {{c4::helper methods}}
+}
+
+@1579181219209
+Class {{c1::Specification}} contains a number of useful methods for writing specifications. Furthermore it instructs JUnit to run specification with {{c2::Sputnik}}, Spock’s {{c3::JUnit runner}}. Thanks to {{c2::Sputnik}}, Spock specifications can be run by most modern Java IDEs and build tools.
+
+## Fields
+
+```groovy
+def obj = new ClassUnderSpecification()
+def coll = new Collaborator()
+```
+
