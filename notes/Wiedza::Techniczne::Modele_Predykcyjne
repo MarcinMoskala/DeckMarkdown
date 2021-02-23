@@ -1,0 +1,39 @@
+<a href="https://github.com/MarcinMoskala/AnkiMarkdown/blob/master/notes/Wiedza::Techniczne::Modele_Predykcyjne">Link</a>
+***
+
+@1613989277711
+Zmienna {{c1::objaśniająca}} – (inaczej {{c2::zmienna egzogeniczna}}) {{c3::zmienna w modelu statystycznym (czyli także np. w modelu ekonometrycznym), na podstawie której wylicza się zmienną objaśnianą (endogeniczną). Zwykle występuje ich wiele.}}.
+
+@1613989277961
+Zmienna {{c1::objaśniana}} - (inaczej zmienna endogeniczna, zmienna odpowiedzi, zmienna prognozowana, zmienna wewnętrzna) – {{c2::zmienna, której wartości są estymowane przez model statystyczny (w szczególności model ekonometryczny).}}
+
+@1613989278233
+Model {{c1::statystyczny}} – {{c2::hipoteza lub układ hipotez, sformułowanych w sposób matematyczny (odpowiednio w postaci równania lub układu równań), który przedstawia zasadnicze powiązania występujące pomiędzy rozpatrywanymi zjawiskami rzeczywistymi.}}
+
+@1613989362310
+{{c1::Regresja}} – {{c2::metoda statystyczna pozwalająca na opisanie współzmienności kilku zmiennych przez dopasowanie do nich funkcji. Umożliwia przewidywanie nieznanych wartości jednych wielkości na podstawie znanych wartości innych. Opisana funkcją \(Y = f(X, \beta) + \epsilon\)}}
+
+Najpopularniejsze modele parametryczne:
+
+@1613990635791
+Regresja {{c1::liniowa}} - Model ten ma ogólną postać kombinacji liniowej wyrazów:
+{{c2::\(Y=\beta _{0}+x_{1}\beta _{1}+x_{2}\beta _{2}+\dots +x_{n}\beta _{n}+\epsilon\)}}
+
+@1613990636069
+Regresja {{c1::liniowa z przekształceniami}} - model ten jest modyfikacją regresji liniowej, ale dopuszcza dowolne przekształcenia zmiennych np:
+{{c2::\(Y=\beta _{0}+\beta _{1}Z+\beta _{2}Z^{2}+\beta _{3}{\sqrt Z}+\beta _{4}\log Z+\epsilon\)}}
+
+@1613990859331
+{{c1::Regresja liniowa z interakcjami}} - Szczególnym przypadek regresji liniowej, dopuszczający interakcje między zmiennymi wyrażonymi jako ich produkt, np.
+{{c2::\(Y=\beta _{0}+\beta _{1}x_{1}+\beta _{2}x_{2}+\beta _{3}x_{1}x_{2}+\epsilon\)}}
+
+@1613990979549
+{{c1::Regresja nieliniowa}} - Regresja, w której postać modelu nie sprowadza się do liniowej kombinacji wyrazów. Na przykład:
+\(Y=\beta _{0}+{\frac {\beta _{1}Z}{\beta _{2}+Z}}+\epsilon\)
+
+@1613992239603
+Do problemu regresji liniowej w Pythonie potrzebujemy kilku bibliotek.
+Przede wszystkim {{c1::NumPy}} do wykonywania {{c2::wydajnych operacji na jedno i wielowymiarowych macierzach}}.
+Następnie {{c3::scikit-learn}} zawierający zbiór narzędzi do uczenia maszynowego, w tym do regresji liniowej (preprocessing data, reducing dimensionality, implementing regression, classification, clustering, and more).
+Jak potrzebujemy więcej narzędzi, możemy użyć {{c4::statsmodels}} zawierający potężny zbiór narzędzi do {{c5::modeli statystycznych}}.
+Aby {{c6::automatycznie odkryć optymalny model}} możemy użyć {{c7::Auto-Sklearn}}

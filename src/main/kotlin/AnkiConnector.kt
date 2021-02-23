@@ -20,27 +20,29 @@ class AnkiConnector(
         notesFile.listFiles()
             .orEmpty()
             .filterNot { it.isDirectory }
-            .forEach { file ->
-                val name = file.name
-                val body = file.readText()
-                val (text, comment) = separateComment(body)
-                val notes = storeOrUpdateNoteText(
-                    deckName = name,
-                    noteContent = text.dropMediaFolderPrefix(),
-                    comment = comment.orEmpty()
-                )
-                val textAfter = parser.writeNotes(notes)
-                val bodyAfter = comment?.let { "$it\n***\n\n" }.orEmpty()+ textAfter.addMediaFolderPrefix()
-                file.writeText(bodyAfter)
-
-//                if(htmlNotesFile.exists() && htmlNotesFile.isDirectory) {
-//                    writeHtml(htmlNotesFile, name, notes)
-//                    writeFormattedText(htmlNotesFile, name, notes)
-//                }
-            }
+            .forEach { syncFile(it) }
     }
 
-    private suspend fun syncMedia(folderName: String) {
+    suspend fun syncFile(file: File) {
+        val name = file.name
+        val body = file.readText()
+        val (text, comment) = separateComment(body)
+        val notes = storeOrUpdateNoteText(
+            deckName = name,
+            noteContent = text.dropMediaFolderPrefix(),
+            comment = comment.orEmpty()
+        )
+        val textAfter = parser.writeNotes(notes)
+        val bodyAfter = comment?.let { "$it\n***\n\n" }.orEmpty() + textAfter.addMediaFolderPrefix()
+        file.writeText(bodyAfter)
+
+//      if(htmlNotesFile.exists() && htmlNotesFile.isDirectory) {
+//          writeHtml(htmlNotesFile, name, notes)
+//          writeFormattedText(htmlNotesFile, name, notes)
+//      }
+    }
+
+    suspend fun syncMedia(folderName: String) {
         val notesFile = File(folderName)
         if (!notesFile.exists() || !notesFile.isDirectory) return
 
