@@ -10,10 +10,10 @@ suspend fun main() = coroutineScope<Unit> {
         .let(::println)
 
     println("Html:")
-    notes.let(DefaultParser::writeNotes)
+    notes.let(DefaultParser::htmlWriteNotes)
         .let(::println)
 
     println("Markdown:")
-    notes.let(DefaultParser::writeNotes)
+    notes.let(DefaultParser::markdownWriteNotes)
         .let(::println)
 }
