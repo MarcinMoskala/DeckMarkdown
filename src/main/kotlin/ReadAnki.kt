@@ -1,10 +1,19 @@
-//import io.writeNotes
-//import kotlinx.coroutines.coroutineScope
-//
-//suspend fun main() = coroutineScope<Unit> {
-//    with(AnkiConnector()) {
-//        readNotesFromDeck(deckName = "Wiedza::Techniczne::ETH")
-//            .let(::writeNotes)
-//            .let(::print)
-//    }
-//}
+import kotlinx.coroutines.coroutineScope
+import note.DefaultParser
+
+suspend fun main() = coroutineScope<Unit> {
+    val notes = AnkiConnector()
+        .readNotesFromDeck(deckName = "Wiedza::Techniczne::Modele_Predykcyjne")
+
+    println("Pure:")
+    notes.let(DefaultParser::writeNotes)
+        .let(::println)
+
+    println("Html:")
+    notes.let(DefaultParser::writeNotes)
+        .let(::println)
+
+    println("Markdown:")
+    notes.let(DefaultParser::writeNotes)
+        .let(::println)
+}

@@ -91,7 +91,11 @@ Program uses [Anki Connect](https://github.com/FooSoft/anki-connect). Install it
 
 It is a Kotlin Gradle project. Import it in IntelliJ and it should be ready to go (supposing that you have Anki Connect installed and Anki started).
 
-Example program presenting existing notes from a deck in `ReadAnki`. Program adding or updating notes based on text in `StoreOrUpdateAnki`. Remamber to change deck names.
+There are a few modes of usage, and they all needs to be started in IntelliJ using run button. 
+* Sync - presented in `Sync.kt`, you can sync a folder or a concrete deck. A typical way to work with this tool. Before you sync for the first time, first use `NodeModels.kt` to add missing node models to your deck. 
+* Write notes - presented in `WriteNotes.kt`, you can generate text, html or markdown from your notes. 
+
+Example program presenting existing notes from a deck in `ReadAnki`. 
 
 ### Next steps
 
