@@ -50,11 +50,10 @@ def {{c7::cleanupSpec}}() {}    // run {{c7::after the last feature method}}
 
 ## Feature Methods
 
-@1579184680140
 ```groovy
-def "pushing an element on the stack"() {{c1::
+def "pushing an element on the stack"() {
   // blocks go here
-}}
+}
 ```
 
 Conceptually, a feature method consists of four phases:

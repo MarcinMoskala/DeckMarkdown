@@ -7,7 +7,7 @@ class MyFirstSpecification extends Specification {
   // <b>feature methods</b>
   // <b>helper methods</b>
 }</div>
-<div>Class <b>Specification}} contains a number of useful methods for writing specifications. Furthermore it instructs JUnit to run specification with {{c2::Sputnik}}, Spock’s {{c3::JUnit runner}}. Thanks to {{c2::Sputnik</b>, Spock specifications can be run by most modern Java IDEs and build tools.</div>
+<div>Class <b>Specification</b> contains a number of useful methods for writing specifications. Furthermore it instructs JUnit to run specification with <b>Sputnik</b>, Spock’s <b>JUnit runner</b>. Thanks to <b>Sputnik</b>, Spock specifications can be run by most modern Java IDEs and build tools.</div>
 <div>## Fields</div>
 <div>```groovy
 def obj = new ClassUnderSpecification()
@@ -21,15 +21,15 @@ def coll = new Collaborator()
 <div><i>Q:</i> What is @Shared doing in Groovy?<br><i>A:</i> Field will be static and one for all tests.</div>
 <div>## Fixture methods</div>
 <div>There are following fixture methods in Spock Specification:
-def <b>setup}}() {}          // run {{c2::before every feature method</b>
-def <b>cleanup}}() {}        // run {{c4::after every feature method</b>
-def <b>setupSpec}}() {}      // run {{c6::before the first feature method</b>
-def <b>cleanupSpec}}() {}    // run {{c7::after the last feature method</b></div>
+def <b>setup</b>() {}          // run <b>before every feature method</b>
+def <b>cleanup</b>() {}        // run <b>after every feature method</b>
+def <b>setupSpec</b>() {}      // run <b>before the first feature method</b>
+def <b>cleanupSpec</b>() {}    // run <b>after the last feature method</b></div>
 <div>## Feature Methods</div>
 <div>```groovy
-def "pushing an element on the stack"() {{{c1::c1::
+def "pushing an element on the stack"() {
   // blocks go here
-}}}
+}
 ```</div>
 <div>Conceptually, a feature method consists of four phases:</div>
 <div>* Set up the feature’s fixture
@@ -37,7 +37,7 @@ def "pushing an element on the stack"() {{{c1::c1::
 * Describe the *response* expected from the system
 * Clean up the feature’s fixture</div>
 <div>## Blocks</div>
-<div>In Spock feature methods there are the following blocks: <b>setup, when, then, expect, cleanup, and where}}. Any statements between the beginning of the method and the first explicit block belong to an implicit {{c2::setup</b> block.</div>
+<div>In Spock feature methods there are the following blocks: <b>setup, when, then, expect, cleanup, and where</b>. Any statements between the beginning of the method and the first explicit block belong to an implicit <b>setup</b> block.</div>
 <div><i>Q:</i> Can he have feature method without any explicit block?<br><i>A:</i> No, the presence of an explicit block is what makes a method a feature method. Blocks divide a method into distinct sections, and cannot be nested.</div>
 <div></div>
 <div>![Blocks2Phases](/Users/marcin.moskala/Projects/AnkiMarkdown/notes/media/Blocks2Phases.png)</div>
