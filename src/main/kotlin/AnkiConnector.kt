@@ -35,7 +35,7 @@ class AnkiConnector(
         val textAfter = parser.writeNotes(notes)
         val bodyAfter = comment?.let { "$it\n***\n\n" }.orEmpty() + textAfter.addMediaFolderPrefix()
         file.writeText(bodyAfter)
-        File("md/$name.md").writeText(parser.markdownWriteNotes(notes))
+        File("docs/$name.md").writeText(parser.markdownWriteNotes(notes))
         File("html/$name.html").writeText(parser.htmlWriteNotes(notes))
     }
 
