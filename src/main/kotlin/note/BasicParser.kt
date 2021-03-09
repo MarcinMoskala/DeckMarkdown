@@ -26,13 +26,13 @@ object BasicParser : FullNoteProcessor<Basic> {
         noteId = note.id ?: ApiNote.NO_ID,
         deckName = deckName,
         modelName = API_NOTE_NAME,
-        fields = mapOf("Front" to note.front, "Back" to note.back, "Extra" to comment)
+        fields = mapOf("Front" to note.front.newLinesToBrs(), "Back" to note.back.newLinesToBrs(), "Extra" to comment.newLinesToBrs())
     )
 
     override fun ankiNoteToCard(apiNote: ApiNote): Basic = Basic(
         apiNote.noteId,
-        apiNote.fields.getValue("Front").removeMultipleBreaks(),
-        apiNote.fields.getValue("Back").removeMultipleBreaks()
+        apiNote.readTextField("Front"),
+        apiNote.readTextField("Back")
     )
 
     override fun toHtml(note: Basic): String = "<i>Q:</i> {front}<br><i>A:</i> {back}"
@@ -65,13 +65,17 @@ object BasicAndReversedParser : FullNoteProcessor<BasicAndReverse> {
         noteId = note.id ?: ApiNote.NO_ID,
         deckName = deckName,
         modelName = API_NOTE_NAME,
-        fields = mapOf("Front" to note.front, "Back" to note.back, "Extra" to comment)
+        fields = mapOf(
+            "Front" to note.front.newLinesToBrs(),
+            "Back" to note.back.newLinesToBrs(),
+            "Extra" to comment.newLinesToBrs()
+        )
     )
 
     override fun ankiNoteToCard(apiNote: ApiNote): BasicAndReverse = BasicAndReverse(
         apiNote.noteId,
-        apiNote.fields.getValue("Front").removeMultipleBreaks(),
-        apiNote.fields.getValue("Back").removeMultipleBreaks()
+        apiNote.readTextField("Front"),
+        apiNote.readTextField("Back")
     )
 
     override fun toHtml(note: BasicAndReverse): String = "<i>Q/A:</i> {front}<br><i>A/Q:</i> {back}"

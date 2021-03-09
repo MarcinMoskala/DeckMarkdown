@@ -1,0 +1,84 @@
+<div>If you want to start working with Spark SQL with PySpark, you’ll need to start a <b>SparkSession</b> first: you can use this to <b>create DataFrames, register DataFrames as tables, execute SQL over the tables and read parquet files</b>.
+<pre><code>
+from pyspark.sql import <b>SparkSession</b>
+spark = <b>SparkSession</b> \
+    .<b>builder</b> \
+    .<b>appName</b>("Python Spark SQL basic example") \
+    .<b>config</b>("spark.some.config.option", "some-value") \
+    .<b>getOrCreate()</b>
+</code></pre></div>
+<div><i>Q/A:</i> df.show()<br><i>A/Q:</i> Display the content of df</div>
+<div><i>Q/A:</i> df.head(n) and df.take(n)<br><i>A/Q:</i> Two ways to return first n rows from df as a list</div>
+<div><i>Q/A:</i> df.first()<br><i>A/Q:</i> Return first row from df</div>
+<div><i>Q/A:</i> df.dtypes<br><i>A/Q:</i> Return df column names and data types
+[('PassengerId', 'int'),
+ ('Survived', 'int'),
+ ('Pclass', 'int'),
+ ('Name', 'string'),
+ ('Sex', 'string'),
+ ...</div>
+<div><i>Q/A:</i> df.schema<br><i>A/Q:</i> Return the schema of df
+StructType(List(StructField(PassengerId,IntegerType,true),StructField(Survived,IntegerType,true),...</div>
+<div><i>Q/A:</i> df.describe().show()<br><i>A/Q:</i> Compute summary statistics of df
+<img src="pyspark_describe.png" style="zoom:50%;" /></div>
+<div><i>Q/A:</i> df.printSchema()<br><i>A/Q:</i> Print the schema of df
+root
+ |-- PassengerId: integer (nullable = true)
+ |-- Survived: integer (nullable = true)
+ |-- Name: string (nullable = true)
+ ...</div>
+<div><i>Q/A:</i> df.columns<br><i>A/Q:</i> Return the columns of df
+['PassengerId',
+ 'Survived',
+ 'Pclass',
+ ...</div>
+<div><i>Q:</i> What to ask for first, to understand data better?<br><i>A:</i> df.printSchema(), df.describe().show(), df.count(), df.dropDuplicates().count()</div>
+<div><i>Q/A:</i> df.count()<br><i>A/Q:</i> Count the number of rows in df</div>
+<div><i>Q/A:</i> df.dropDuplicates() or df.distinct()<br><i>A/Q:</i> Drop duplicate from the df</div>
+<div><i>Q/A:</i> df.distinct().count() or df.dropDuplicates().count()<br><i>A/Q:</i> Count the number of distinct rows in df</div>
+<div><i>Q:</i> dropDuplicates vs distinct<br><i>A:</i> dropDuplicates() was introduced in 1.4 as a replacement for distinct(), as you can use it's overloaded methods to get unique rows based on subset of columns.</div>
+<div><i>Q/A:</i> Show columns firstName and lastName from df.<br><i>A/Q:</i> df.select("firstName","lastName").show()</div>
+<div><i>Q/A:</i> Show columns firstName and age + 1 from df.<br><i>A/Q:</i> df.select(df["firstName"],df["age"]+ 1).show()
++--------------------+---------+
+|                Name|(Age + 1)|
++--------------------+---------+
+|Braund, Mr. Owen ...|     23.0|
+|Cumings, Mrs. Joh...|     39.0|
+|Heikkinen, Miss. ...|     27.0|
+...</div>
+<div><i>Q/A:</i> Show column firstName and 1 when age > 30, 0 otherwise<br><i>A/Q:</i> from pyspark.sql.functions import when
+df.select("firstName", when(df.age > 30, 1).otherwise(0)).show()</div>
+<div><i>Q/A:</i> Show df rows with firstName either "Jane" or "Boris"<br><i>A/Q:</i> df[df.firstName.isin("Jane","Boris")].show()</div>
+<div><i>Q/A:</i> Return all the elements of the dataset as an array at the driver program. This is usually useful after a filter or other operation that returns a sufficiently small subset of the data.<br><i>A/Q:</i> ds.collect()</div>
+<div><i>Q/A:</i> Show df minimal age<br><i>A/Q:</i> from pyspark.sql import functions as F
+df.agg(F.min(df.age)).show()</div>
+<div><i>Q/A:</i> df.filter(df["age"]>24).show() or df.where(df["age"]>24).show()<br><i>A/Q:</i> Keep only rows with age > 24. (2 ways)</div>
+<div><i>Q:</i> filter vs where<br><i>A:</i> Identical</div>
+<div><i>Q/A:</i> Adding columns in PySpark<br><i>A/Q:</i> df = df.withColumn('city',df.address.city) \
+   .withColumn('postalCode',df.address.postalCode) \
+   .withColumn('state',df.address.state) \
+   .withColumn('streetAddress',df.address.streetAddress) \</div>
+<div><i>Q:</i> How to rename a column in PySpark?<br><i>A:</i> df = df.withColumnRenamed('telePhoneNumber', 'phoneNumber')</div>
+<div><i>Q/A:</i> Remove a column in pyspark<br><i>A/Q:</i> df = df.drop("address", "phoneNumber")</div>
+<div><i>Q/A:</i> Count rows with each age in df<br><i>A/Q:</i> df.groupBy("age").count().show()</div>
+<div><i>Q:</i> What does df.groupBy("something") return?<br><i>A:</i> GroupedData</div>
+<div><i>Q:</i> Take rows from df with age between 22 and 24<br><i>A:</i> df.select(df.age.between(22, 24)).show()</div>
+<div><i>Q:</i> Take column with only first 4 letters from firstName<br><i>A:</i> df.select(df.firstName.substr(0, 3).alias("name")).collect()</div>
+<div><i>Q:</i> Take lastName ending with th<br><i>A:</i> df.select(df.lastName.endswith("th"))</div>
+<div><i>Q/A:</i> Average survival rate for each age<br><i>A/Q:</i> df.groupBy("Age").mean("Survived").show()</div>
+<div><i>Q/A:</i> Average survival rate for each age decade<br><i>A/Q:</i> from pyspark.sql.functions import col
+def age_group(age):
+   return 10 * floor(age / 10)
+df.groupBy(age_group(col('Age'))).mean("Survived").show()</div>
+<div><i>Q:</i> Two ways to sort descending by age<br><i>A:</i> df.sort(df.age.desc()).collect()
+df.sort("age", ascending=False).collect()</div>
+<div><i>Q/A:</i> Sort by age descending, and by city ascending<br><i>A/Q:</i> df.orderBy(["age","city"],ascending=[0,1]).collect()</div>
+<div><i>Q/A:</i> Fill lack of values in df with ""<br><i>A/Q:</i> df.na.fill("") or df.fillna("")</div>
+<div><i>Q:</i> Replace value in df<br><i>A:</i> df.replace(0, 100).show()</div>
+<div><i>Q:</i> Convert df into an RDD<br><i>A:</i> rdd1 = df.rdd</div>
+<div><i>Q:</i> Return the contents of df as Pandas DataFrame<br><i>A:</i> df.toPandas()</div>
+<div><i>Q:</i> Read df from json<br><i>A:</i> df = spark.read.json("customer.json")</div>
+<div><i>Q:</i> Read df from csv, where the first line is header<br><i>A:</i> df = spark.read.csv("customer.json",header = 'True',inferSchema='True')</div>
+<div><i>Q:</i> Save df as json<br><i>A:</i> df.write.save("data.json",format="json")</div>
+<div><i>Q:</i> Save df as csv<br><i>A:</i> df.write.save("data.csv",format="csv")</div>
+<div><i>Q:</i> Stopping Spark Session<br><i>A:</i> spark.stop()</div>

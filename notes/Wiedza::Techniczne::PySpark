@@ -1,0 +1,216 @@
+<a href="https://github.com/MarcinMoskala/AnkiMarkdown/blob/master/notes/Wiedza::Techniczne::PySpark">Link</a>
+<br>
+<a href="https://ugoproto.github.io/ugo_py_doc/pdf/PySpark_SQL_Cheat_Sheet_Python.pdf">Cheat Sheet Python</a>
+***
+
+@1615113152460
+If you want to start working with Spark SQL with PySpark, you’ll need to start a {{c1::SparkSession}} first: you can use this to {{c2::create DataFrames, register DataFrames as tables, execute SQL over the tables and read parquet files}}.
+<pre><code>
+from pyspark.sql import {{c1::SparkSession}}
+spark = {{c1::SparkSession}} \
+    .{{c3::builder}} \
+    .{{c4::appName}}("Python Spark SQL basic example") \
+    .{{c5::config}}("spark.some.config.option", "some-value") \
+    .{{c6::getOrCreate()}}
+</code></pre>
+
+@1615133240972
+qa: df.show()
+aq: Display the content of df
+
+@1615155132601
+qa: df.head(n) and df.take(n)
+aq: Two ways to return first n rows from df as a list
+
+@1615133241048
+qa: df.first()
+aq: Return first row from df
+
+@1615133240943
+qa: df.dtypes
+aq: Return df column names and data types
+[('PassengerId', 'int'),
+ ('Survived', 'int'),
+ ('Pclass', 'int'),
+ ('Name', 'string'),
+ ('Sex', 'string'),
+ ...
+
+@1615133241117
+qa: df.schema
+aq: Return the schema of df
+StructType(List(StructField(PassengerId,IntegerType,true),StructField(Survived,IntegerType,true),...
+
+@1615155733590
+qa: df.describe().show()
+aq: Compute summary statistics of df
+<img src="media/pyspark_describe.png" style="zoom:50%;" />
+
+@1615133241292
+qa: df.printSchema()
+aq: Print the schema of df
+root
+ |-- PassengerId: integer (nullable = true)
+ |-- Survived: integer (nullable = true)
+ |-- Name: string (nullable = true)
+ ...
+
+@1615133241172
+qa: df.columns
+aq: Return the columns of df
+['PassengerId',
+ 'Survived',
+ 'Pclass',
+ ...
+
+@1615239170402
+q: What to ask for first, to understand data better?
+a: df.printSchema(), df.describe().show(), df.count(), df.dropDuplicates().count()
+
+@1615133241216
+qa: df.count()
+aq: Count the number of rows in df
+
+@1615133241341
+qa: df.dropDuplicates() or df.distinct()
+aq: Drop duplicate from the df
+
+@1615133241246
+qa: df.distinct().count() or df.dropDuplicates().count()
+aq: Count the number of distinct rows in df
+
+@1615238809240
+q: dropDuplicates vs distinct
+a: dropDuplicates() was introduced in 1.4 as a replacement for distinct(), as you can use it's overloaded methods to get unique rows based on subset of columns.
+
+@1615139617418
+qa: Show columns firstName and lastName from df.
+aq: df.select("firstName","lastName").show()
+
+@1615139617469
+qa: Show columns firstName and age + 1 from df.
+aq: df.select(df["firstName"],df["age"]+ 1).show()
++--------------------+---------+
+|                Name|(Age + 1)|
++--------------------+---------+
+|Braund, Mr. Owen ...|     23.0|
+|Cumings, Mrs. Joh...|     39.0|
+|Heikkinen, Miss. ...|     27.0|
+...
+
+@1615139617520
+qa: Show column firstName and 1 when age > 30, 0 otherwise
+aq: from pyspark.sql.functions import when
+df.select("firstName", when(df.age > 30, 1).otherwise(0)).show()
+
+@1615139617572
+qa: Show df rows with firstName either "Jane" or "Boris"
+aq: df[df.firstName.isin("Jane","Boris")].show()
+
+@1615139617622
+qa: Return all the elements of the dataset as an array at the driver program. This is usually useful after a filter or other operation that returns a sufficiently small subset of the data.
+aq: ds.collect()
+
+@1615139617672
+qa: Show df minimal age
+aq: from pyspark.sql import functions as F
+df.agg(F.min(df.age)).show()
+
+@1615155081662
+qa: df.filter(df["age"]>24).show() or df.where(df["age"]>24).show()
+aq: Keep only rows with age > 24. (2 ways)
+
+@1615238809488
+q: filter vs where
+a: Identical
+
+@1615294230823
+qa: Adding columns in PySpark
+aq: df = df.withColumn('city',df.address.city) \
+   .withColumn('postalCode',df.address.postalCode) \
+   .withColumn('state',df.address.state) \
+   .withColumn('streetAddress',df.address.streetAddress) \
+
+@1615294230875
+q: How to rename a column in PySpark?
+a: df = df.withColumnRenamed('telePhoneNumber', 'phoneNumber')
+
+@1615294230920
+qa: Remove a column in pyspark
+aq: df = df.drop("address", "phoneNumber")
+
+@1615294230975
+qa: Count rows with each age in df
+aq: df.groupBy("age").count().show()
+
+@1615294231022
+q: What does df.groupBy("something") return?
+a: GroupedData
+
+@1615294813179
+q: Take rows from df with age between 22 and 24
+a: df.select(df.age.between(22, 24)).show()
+
+@1615294813203
+q: Take column with only first 4 letters from firstName
+a: df.select(df.firstName.substr(0, 3).alias("name")).collect()
+
+@1615294813257
+q: Take lastName ending with th
+a: df.select(df.lastName.endswith("th"))
+
+@1615294231075
+qa: Average survival rate for each age
+aq: df.groupBy("Age").mean("Survived").show()
+
+@1615294890804
+qa: Average survival rate for each age decade
+aq: from pyspark.sql.functions import col
+def age_group(age):
+   return 10 * floor(age / 10)
+df.groupBy(age_group(col('Age'))).mean("Survived").show()
+
+@1615294231121
+q: Two ways to sort descending by age
+a: df.sort(df.age.desc()).collect()
+df.sort("age", ascending=False).collect()
+
+@1615294231175
+qa: Sort by age descending, and by city ascending
+aq: df.orderBy(["age","city"],ascending=[0,1]).collect()
+
+@1615294231222
+qa: Fill lack of values in df with ""
+aq: df.na.fill("") or df.fillna("")
+
+@1615294231277
+q: Replace value in df
+a: df.replace(0, 100).show()
+
+@1615294231325
+q: Convert df into an RDD
+a: rdd1 = df.rdd
+
+@1615294231421
+q: Return the contents of df as Pandas DataFrame
+a: df.toPandas()
+
+@1615294231476
+q: Read df from json
+a: df = spark.read.json("customer.json")
+
+@1615294231521
+q: Read df from csv, where the first line is header
+a: df = spark.read.csv("customer.json",header = 'True',inferSchema='True')
+
+@1615294231575
+q: Save df as json
+a: df.write.save("data.json",format="json")
+
+@1615294231620
+q: Save df as csv
+a: df.write.save("data.csv",format="csv")
+
+@1615294231674
+q: Stopping Spark Session
+a: spark.stop()

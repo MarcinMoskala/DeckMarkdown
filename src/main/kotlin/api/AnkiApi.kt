@@ -7,6 +7,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.post
+import note.brsToNewLines
+import note.newLinesToBrs
+import note.removeMultipleBreaks
 import java.io.File
 import java.net.ConnectException
 import java.util.*
@@ -37,6 +40,10 @@ data class ApiNote(
     val tags: List<String> = emptyList()
 ) : ApiNoteOrText() {
     val hasId get() = noteId != NO_ID
+
+    fun readTextField(field: String) = fields.getValue(field)
+        .removeMultipleBreaks()
+        .brsToNewLines()
 
     companion object {
         const val NO_ID = -1L

@@ -71,9 +71,9 @@ object ListDeletionParser : FullNoteProcessor<ListDeletion> {
         apiNote.fields.getValue("General Comment")
     )
 
-    override fun toHtml(note: ListDeletion): String = TODO()
+    override fun toHtml(note: ListDeletion): String = "TODO"
 
-    override fun toMarkdown(note: ListDeletion): String = TODO()
+    override fun toMarkdown(note: ListDeletion): String = "TODO"
 }
 
 private fun <K, V> Map<K, V>.reverseLookup(value: V) =

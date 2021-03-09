@@ -23,12 +23,12 @@ object ClozeParser : FullNoteProcessor<Cloze> {
         noteId = note.id ?: ApiNote.NO_ID,
         deckName = deckName,
         modelName = API_NOTE_NAME,
-        fields = mapOf("Text" to note.text, "Extra" to comment)
+        fields = mapOf("Text" to note.text.newLinesToBrs(), "Extra" to comment.newLinesToBrs())
     )
 
     override fun ankiNoteToCard(apiNote: ApiNote): Cloze = Note.Cloze(
         apiNote.noteId,
-        apiNote.fields.getValue("Text").removeMultipleBreaks()
+        apiNote.readTextField("Text")
     )
 
     override fun toHtml(note: Cloze): String = note.text

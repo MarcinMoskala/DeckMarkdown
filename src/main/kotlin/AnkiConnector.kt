@@ -35,11 +35,8 @@ class AnkiConnector(
         val textAfter = parser.writeNotes(notes)
         val bodyAfter = comment?.let { "$it\n***\n\n" }.orEmpty() + textAfter.addMediaFolderPrefix()
         file.writeText(bodyAfter)
-
-//      if(htmlNotesFile.exists() && htmlNotesFile.isDirectory) {
-//          writeHtml(htmlNotesFile, name, notes)
-//          writeFormattedText(htmlNotesFile, name, notes)
-//      }
+        File("md/$name.md").writeText(parser.markdownWriteNotes(notes))
+        File("html/$name.html").writeText(parser.htmlWriteNotes(notes))
     }
 
     suspend fun syncMedia(folderName: String) {
