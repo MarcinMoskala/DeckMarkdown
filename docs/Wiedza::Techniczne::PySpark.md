@@ -1,11 +1,11 @@
-If you want to start working with Spark SQL with PySpark, you’ll need to start a SparkSession first: you can use this to create DataFrames, register DataFrames as tables, execute SQL over the tables and read parquet files.
+If you want to start working with Spark SQL with PySpark, you’ll need to start a *SparkSession* first: you can use this to *create DataFrames, register DataFrames as tables, execute SQL over the tables and read parquet files*.
 <pre><code>
-from pyspark.sql import SparkSession
-spark = SparkSession \
-    .builder \
-    .appName("Python Spark SQL basic example") \
-    .config("spark.some.config.option", "some-value") \
-    .getOrCreate()
+from pyspark.sql import *SparkSession*
+spark = *SparkSession* \
+    .*builder* \
+    .*appName*("Python Spark SQL basic example") \
+    .*config*("spark.some.config.option", "some-value") \
+    .*getOrCreate()*
 </code></pre>
 
 Q/A: df.show()

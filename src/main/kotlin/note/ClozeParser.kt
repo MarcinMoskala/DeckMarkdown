@@ -35,7 +35,7 @@ object ClozeParser : FullNoteProcessor<Cloze> {
         .replace(CLOZE_REGEX) { "<b>${it.groupValues[2]}</b>" }
 
     override fun toMarkdown(note: Cloze): String = note.text
-        .replace(CLOZE_REGEX) { it.groupValues[2] }
+        .replace(CLOZE_REGEX) { "*${it.groupValues[2]}*" }
 
     private fun processToCloze(text: String): String {
         if (CLOZE_REGEX in text) return text
