@@ -39,7 +39,7 @@ object BasicParser : FullNoteProcessor<Basic> {
         .replace("{front}", note.front)
         .replace("{back}", note.back)
 
-    override fun toMarkdown(note: Basic): String = "Q: {front}\nA: {back}"
+    override fun toMarkdown(note: Basic): String = "*Question: {front}*\n\nAnswer: {back}"
         .replace("{front}", note.front)
         .replace("{back}", note.back)
 }
@@ -82,7 +82,7 @@ object BasicAndReversedParser : FullNoteProcessor<BasicAndReverse> {
         .replace("{front}", note.front)
         .replace("{back}", note.back)
 
-    override fun toMarkdown(note: BasicAndReverse): String = "Q/A: {front}\nA/Q: {back}"
+    override fun toMarkdown(note: BasicAndReverse): String = "*Question: {front}*\n\nAnswer: {back}"
         .replace("{front}", note.front)
         .replace("{back}", note.back)
 }

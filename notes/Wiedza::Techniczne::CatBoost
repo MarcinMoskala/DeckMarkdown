@@ -1,0 +1,19 @@
+<a href="https://github.com/MarcinMoskala/AnkiMarkdown/blob/master/notes/Wiedza::Techniczne::CatBoost">Link</a>
+***
+
+@1615370959650
+q: Heterogeneous vs Homogeneous data in terms of ML?
+a: Heterogeneous data are a collections of different data, like a table with data about user.
+Homogeneous data are of the same nature, like images, sound, text etc.
+
+@1615370959701
+q: What kind od algorithms do we use to predict based on Heterogeneous data?
+a: Currently, mainly those based on trees, like Random Forest or CatBoost.
+
+@1615370959750
+q: What kind od algorithms do we use to predict based on Homogeneous data?
+a: Currently, mainly those based on neural networks.
+
+@1615370959801
+q: What CatBoost introduced?
+a: AAA
