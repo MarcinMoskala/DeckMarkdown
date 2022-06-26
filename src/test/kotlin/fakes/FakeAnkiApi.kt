@@ -8,7 +8,8 @@ import java.io.File
 import kotlin.random.Random
 
 class FakeAnkiApi : RepositoryApi {
-    private var notes = listOf<ApiNote>()
+    var notes = listOf<ApiNote>()
+        private set
     var addUsedCount = 0
         private set
     var updateUsedCount = 0

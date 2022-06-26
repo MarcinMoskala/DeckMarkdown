@@ -1,3 +1,5 @@
+import kotlinx.coroutines.runBlocking
+import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -17,5 +19,17 @@ inline fun <reified T : Throwable> assertThrows(expectedMessage: String? = null,
             exception.message,
             "The message is <${exception.message}> when it should be <$expectedMessage>"
         )
+    }
+}
+
+private val FAKE_FILE_NAME = "some::deck"
+
+fun fakeFileTest(body: suspend (File) -> Unit) = runBlocking {
+    val file = File("$FAKE_FILE_NAME.md")
+    @Suppress("BlockingMethodInNonBlockingContext") file.createNewFile()
+    try {
+        body(file)
+    } finally {
+        file.delete()
     }
 }

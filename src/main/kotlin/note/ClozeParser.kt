@@ -8,6 +8,7 @@ object ClozeParser : FullNoteProcessor<Cloze> {
     private val CLOZE_REGEX = "\\{\\{([^:]+::(.+?))}}".toRegex()
     private val STANDALONE_BRACKET_REGEX = "\\{\\{([^}{]+)}}".toRegex()
     private const val API_NOTE_NAME = "Cloze"
+    const val TEXT_FIELD = "Text"
 
     override fun handlesNote(note: Note): Boolean = note is Cloze
 
@@ -19,16 +20,16 @@ object ClozeParser : FullNoteProcessor<Cloze> {
 
     override fun recognizeApiNote(apiNote: ApiNote): Boolean = apiNote.modelName == API_NOTE_NAME
 
-    override fun cardToAnkiNote(note: Cloze, deckName: String, comment: String): ApiNote = ApiNote(
+    override fun cardToAnkiNote(note: Cloze, deckName: String, comment: String ): ApiNote = ApiNote(
         noteId = note.id ?: ApiNote.NO_ID,
         deckName = deckName,
         modelName = API_NOTE_NAME,
-        fields = mapOf("Text" to note.text.newLinesToBrs(), "Extra" to comment.newLinesToBrs())
+        fields = mapOf(TEXT_FIELD to note.text.newLinesToBrs(), "Extra" to comment.newLinesToBrs())
     )
 
     override fun ankiNoteToCard(apiNote: ApiNote): Cloze = Note.Cloze(
         apiNote.noteId,
-        apiNote.readTextField("Text")
+        apiNote.readTextField(TEXT_FIELD)
     )
 
     override fun toHtml(note: Cloze): String = note.text

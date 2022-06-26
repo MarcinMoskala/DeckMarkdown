@@ -6,11 +6,10 @@ import org.junit.Test
 import java.io.File
 import kotlin.test.assertEquals
 
-class SyncFileTests {
+class PushFileTests {
 
     private lateinit var apiFake: FakeAnkiApi
     private lateinit var ankiMarkup: AnkiConnector
-    private val FAKE_FILE_NAME = "some::deck"
 
     @Before
     fun setup() {
@@ -35,7 +34,7 @@ A {{c1::B}} C {{c2::D}} E
         )
 
         // when synced for the first time
-        ankiMarkup.syncFile(file)
+        ankiMarkup.pushFile(file)
 
         // then added two noted
         assertEquals(apiFake.addUsedCount, 2)
@@ -43,7 +42,7 @@ A {{c1::B}} C {{c2::D}} E
         assertEquals(apiFake.updateUsedCount, 0)
 
         // when synced again without changes
-        ankiMarkup.syncFile(file)
+        ankiMarkup.pushFile(file)
 
         // then no additional operations were made
         assertEquals(apiFake.addUsedCount, 2)
@@ -66,7 +65,7 @@ A {{c1::B}} C {{c2::D}} E
         )
 
         // when synced for the first time
-        ankiMarkup.syncFile(file)
+        ankiMarkup.pushFile(file)
 
         // then added two noted
         assertEquals(apiFake.addUsedCount, 2)
@@ -84,21 +83,11 @@ aq: Some answer
 A {{c1::B}} C {{c2::D}} E
         """.trimIndent()
         )
-        ankiMarkup.syncFile(file)
+        ankiMarkup.pushFile(file)
 
         // then added two noted
         assertEquals(apiFake.addUsedCount, 2)
         assertEquals(apiFake.removeUsedCount, 0)
         assertEquals(apiFake.updateUsedCount, 1)
-    }
-
-    private fun fakeFileTest(body: suspend (File) -> Unit) = runBlocking {
-        val file = File("$FAKE_FILE_NAME.md")
-        @Suppress("BlockingMethodInNonBlockingContext") file.createNewFile()
-        try {
-            body(file)
-        } finally {
-            file.delete()
-        }
     }
 }

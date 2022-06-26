@@ -19,10 +19,10 @@ class AnkiConnector(
         notesFile.listFiles()
             .orEmpty()
             .filterNot { it.isDirectory }
-            .forEach { syncFile(it) }
+            .forEach { pushFile(it) }
     }
 
-    suspend fun syncFile(file: File) {
+    suspend fun pushFile(file: File) {
         require(file.exists())
 
         val name = file.name.replace(".md", "")
@@ -40,6 +40,21 @@ class AnkiConnector(
         File("docs/$name.html").writeText(
             parser.htmlWriteNotes(notes)
         )
+    }
+
+    suspend fun pullFile(file: File) {
+        val name = file.name.replace(".md", "")
+        val body = file.readText()
+        val (text, comment) = separateComment(body)
+        val noteContent = text.dropMediaFolderPrefix()
+        val currentAnkiNotes: List<Note> = api.getNotesInDeck(name).map { parser.apiNoteToNote(it) }
+        val currentAnkiNotesByIds: Map<Long?, Note> = currentAnkiNotes.associateBy { it.id }
+        val currentFileNotes: List<Note> = parser.parseNotes(noteContent)
+        val currentFileNotesIds = currentFileNotes.map { it.id }.toSet()
+        val updatedFileNotes = currentFileNotes.mapNotNull { if (it is Note.Text) it else currentAnkiNotesByIds[it.id] }
+        val newFileNotes = currentAnkiNotes.filter { it.id !in currentFileNotesIds }
+        val allFileNotes = updatedFileNotes + newFileNotes
+        writeToFile(allFileNotes, comment, file)
     }
 
     suspend fun syncMedia(folderName: String) {
