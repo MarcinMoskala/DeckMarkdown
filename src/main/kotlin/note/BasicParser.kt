@@ -12,6 +12,7 @@ object BasicParser : FullNoteProcessor<Basic> {
     override fun handlesNote(note: Note): Boolean = note is Basic
 
     override fun recognize(text: String): Boolean = PATTERN in text
+
     override fun parse(id: Long?, noteText: String): Basic {
         val (question, answer) = parseQA(noteText, PATTERN)
         return Basic(id, question, answer)
@@ -21,7 +22,9 @@ object BasicParser : FullNoteProcessor<Basic> {
         .replace("{front}", note.front)
         .replace("{back}", note.back)
 
-    override fun recognizeApiNote(apiNote: ApiNote): Boolean = apiNote.modelName == API_NOTE_NAME
+    override fun recognizeApiNote(apiNote: ApiNote): Boolean = apiNote.modelName == API_NOTE_NAME ||
+        apiNote.modelName.matches(Regex("$API_NOTE_NAME-[\\d]*"))
+
     override fun cardToAnkiNote(note: Basic, deckName: String, comment: String): ApiNote = ApiNote(
         noteId = note.id ?: ApiNote.NO_ID,
         deckName = deckName,
@@ -51,6 +54,7 @@ object BasicAndReversedParser : FullNoteProcessor<BasicAndReverse> {
     override fun handlesNote(note: Note): Boolean = note is BasicAndReverse
 
     override fun recognize(text: String): Boolean = PATTERN in text
+
     override fun parse(id: Long?, noteText: String): BasicAndReverse {
         val (question, answer) = parseQA(noteText, PATTERN)
         return BasicAndReverse(id, question, answer)
@@ -60,7 +64,9 @@ object BasicAndReversedParser : FullNoteProcessor<BasicAndReverse> {
         .replace("{front}", note.front)
         .replace("{back}", note.back)
 
-    override fun recognizeApiNote(apiNote: ApiNote): Boolean = apiNote.modelName == API_NOTE_NAME
+    override fun recognizeApiNote(apiNote: ApiNote): Boolean = apiNote.modelName == API_NOTE_NAME ||
+        apiNote.modelName.matches(Regex("Basic \\(and reversed card\\)-\\d*"))
+
     override fun cardToAnkiNote(note: BasicAndReverse, deckName: String, comment: String): ApiNote = ApiNote(
         noteId = note.id ?: ApiNote.NO_ID,
         deckName = deckName,

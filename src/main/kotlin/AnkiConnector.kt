@@ -1,6 +1,7 @@
 import note.DeckParser
 import note.DefaultParser
 import parse.AnkiApi
+import parse.ApiNote
 import parse.RepositoryApi
 import java.io.File
 
@@ -15,8 +16,6 @@ class AnkiConnector(
 
         syncMedia("$folderName/media")
 
-//    val htmlNotesFile = File("notesHtml")
-
         notesFile.listFiles()
             .orEmpty()
             .filterNot { it.isDirectory }
@@ -24,7 +23,9 @@ class AnkiConnector(
     }
 
     suspend fun syncFile(file: File) {
-        val name = file.name
+        require(file.exists())
+
+        val name = file.name.replace(".md", "")
         val body = file.readText()
         val (text, comment) = separateComment(body)
         val notes = storeOrUpdateNoteText(
@@ -32,15 +33,18 @@ class AnkiConnector(
             noteContent = text.dropMediaFolderPrefix(),
             comment = comment.orEmpty()
         )
-        val textAfter = parser.writeNotes(notes)
-        val bodyAfter = comment?.let { "$it\n***\n\n" }.orEmpty() + textAfter.addMediaFolderPrefix()
-        file.writeText(bodyAfter)
-        File("docs/$name.md").writeText(parser.markdownWriteNotes(notes))
-        File("docs/$name.html").writeText(parser.htmlWriteNotes(notes))
+        writeToFile(notes, comment, file)
+        File("docs/$name.md").writeText(
+            parser.markdownWriteNotes(notes)
+        )
+        File("docs/$name.html").writeText(
+            parser.htmlWriteNotes(notes)
+        )
     }
 
     suspend fun syncMedia(folderName: String) {
         val notesFile = File(folderName)
+
         if (!notesFile.exists() || !notesFile.isDirectory) return
 
         notesFile.listFiles()!!.forEach { file ->
@@ -51,6 +55,18 @@ class AnkiConnector(
     suspend fun readNotesFromDeck(deckName: String): List<Note> =
         api.getNotesInDeck(deckName)
             .map(parser::apiNoteToNote)
+
+    suspend fun writeNotesToFile(deckName: String, file: File, comment: String? = null) {
+        val notes = readNotesFromDeck(deckName)
+        writeToFile(notes, comment, file)
+    }
+
+    private fun writeToFile(notes: List<Note>, comment: String?, file: File) {
+        val textAfter = parser.writeNotes(notes)
+        val bodyAfter = comment?.let { "$it\n***\n\n" }
+            .orEmpty() + textAfter.addMediaFolderPrefix()
+        file.writeText(bodyAfter)
+    }
 
     private data class TextAndComment(val text: String, val comment: String? = null)
 
@@ -78,18 +94,26 @@ class AnkiConnector(
         val currentCards = api.getNotesInDeck(deckName)
         val currentIds = currentCards.map { it.noteId }
 
-        val removedCardIds = currentIds - notes.mapNotNull { it.id }
+        val removedCardIds = currentIds - notes.mapNotNull { it.id }.toSet()
         api.deleteNotes(removedCardIds)
 
         val removedCount = removedCardIds.size
         var addedCount = 0
         var updatedCount = 0
+        var leftUnchanged = 0
         val newCards = notes.map(fun(note: Note): Note {
             if (note is Note.Text) return note
-            val apiNote = parser.noteToApiNote(note, deckName, comment)
+            val apiNote: ApiNote = parser.noteToApiNote(note, deckName, comment)
             val newApiNote = if (apiNote.hasId && apiNote.noteId in currentIds) {
-                updatedCount++
-                api.updateNoteFields(apiNote)
+                val current: Note? = currentCards.find { it.noteId == apiNote.noteId }
+                    ?.let { parser.apiNoteToNote(it) }
+                if (note == current) {
+                    leftUnchanged++
+                    apiNote
+                } else {
+                    updatedCount++
+                    api.updateNoteFields(apiNote)
+                }
             } else {
                 addedCount++
                 api.addNote(apiNote)
@@ -97,7 +121,7 @@ class AnkiConnector(
             return parser.apiNoteToNote(newApiNote)
         })
 
-        println("In deck $deckName added $addedCount, updated $updatedCount, removed $removedCount")
+        println("In deck $deckName added $addedCount, updated $updatedCount, removed $removedCount, letf unchanged: $leftUnchanged")
         return newCards
     }
 }

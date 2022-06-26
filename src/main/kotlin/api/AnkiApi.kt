@@ -3,12 +3,10 @@ package parse
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import io.ktor.client.HttpClient
-import io.ktor.client.features.json.GsonSerializer
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.request.post
+import io.ktor.client.*
+import io.ktor.client.features.json.*
+import io.ktor.client.request.*
 import note.brsToNewLines
-import note.newLinesToBrs
 import note.removeMultipleBreaks
 import java.io.File
 import java.net.ConnectException
@@ -37,11 +35,10 @@ data class ApiNote(
     val deckName: String,
     val modelName: String,
     val fields: Map<String, String>,
-    val tags: List<String> = emptyList()
 ) : ApiNoteOrText() {
     val hasId get() = noteId != NO_ID
 
-    fun readTextField(field: String) = fields.getValue(field)
+    fun readTextField(field: String): String = fields.getValue(field)
         .removeMultipleBreaks()
         .brsToNewLines()
 
@@ -72,7 +69,6 @@ data class NoteReceiveDataApi(
         deckName = deckName,
         modelName = modelName,
         fields = fields.mapValues { it.value.value },
-        tags = tags
     )
 }
 
