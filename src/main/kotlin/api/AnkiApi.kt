@@ -19,7 +19,7 @@ interface RepositoryApi {
     suspend fun getNotesInDeck(deckName: String): List<ApiNote>
     suspend fun createDeck(name: String)
     suspend fun removeDeck(name: String)
-    suspend fun deleteNotes(ids: List<Long>)
+    suspend fun deleteNotes(ids: Set<Long>)
     suspend fun getDecks(): List<String>
     suspend fun getModelsNames(): List<String>
     suspend fun addModel(model: ApiNoteModel)
@@ -149,7 +149,7 @@ class AnkiApi : RepositoryApi {
         if (res.error != null) throw Error("${res.error} for $name")
     }
 
-    override suspend fun deleteNotes(ids: List<Long>) {
+    override suspend fun deleteNotes(ids: Set<Long>) {
         val idsAsString = ids.joinToString(prefix = "[", postfix = "]", separator = ", ")
         val text = client.post<String>(url) {
             val bodyText = """{"action": "deleteNotes", "version": 6, "params": {"notes": $idsAsString}}"""

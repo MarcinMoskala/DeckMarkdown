@@ -95,7 +95,7 @@ class AnkiConnector(
         val currentIds = currentCards.map { it.noteId }
 
         val removedCardIds = currentIds - notes.mapNotNull { it.id }.toSet()
-        api.deleteNotes(removedCardIds)
+        api.deleteNotes(removedCardIds.toSet())
 
         val removedCount = removedCardIds.size
         var addedCount = 0
